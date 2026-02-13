@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug wallet frontend",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/src/wallet/frontend",
+      "preLaunchTask": "vite-dev"
+    },
+    {
+      "name": "Debug wallet backend",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "quart",
+      "cwd": "${workspaceFolder}/src/wallet/backend",
+      "args": ["--app", "src.app:app", "run", "--port", "5000", "--reload"],
+      "jinja": true,
+      "justMyCode": true,
+      "subProcess": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug wallet",
+      "configurations": ["Debug wallet backend", "Debug wallet frontend"]
+    }
+  ]
+}
