@@ -18,9 +18,8 @@ jobs:
       - name: Build wallet frontend image
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./Dockerfile
-          cwd: ./src/wallet/frontend
+          context: ./src/wallet/frontend
+          file: ./src/wallet/frontend/Dockerfile
 
       - name: Lint backend
         run: uvx flake8 ./src/wallet/backend/src --show-source --statistics
@@ -28,6 +27,5 @@ jobs:
       - name: Build wallet backend image
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./Dockerfile
-          cwd: ./src/wallet/backend
+          context: ./src/wallet/backend
+          file: ./src/wallet/backend/Dockerfile
