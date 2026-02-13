@@ -19,7 +19,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./src/wallet/frontend/Dockerfile
+          file: ./Dockerfile
+          cwd: ./src/wallet/frontend
 
       - name: Lint backend
         run: uvx flake8 ./src/wallet/backend/src --show-source --statistics
@@ -28,4 +29,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./src/wallet/backend/Dockerfile
+          file: ./Dockerfile
+          cwd: ./src/wallet/backend
