@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+      - "5678:5678"
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      - QUART_ENV=development
+      - QUART_APP=src.app:app
+    command: >
+      sh -c "python -m debugpy --listen 0.0.0.0:5678 -m quart run --host 0.0.0.0 --port 5000 --reload"
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app/frontend
+    environment:
+      - NODE_ENV=development
+    command: >
+      sh -c "if [ ! -d node_modules ]; then npm ci; fi;
+             npm run dev -- --host"
+    depends_on:
+      - backend

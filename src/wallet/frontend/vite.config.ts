@@ -7,9 +7,14 @@ export default defineConfig({
   server: {
     proxy: {
       "/wallet": {
-        target: "http://localhost:5000",
+        target: "http://backend:5000",
         changeOrigin: true,
       },
+    },
+    host: true,
+    watch: {
+      usePolling: true,
+      interval: 100,
     },
   },
 });

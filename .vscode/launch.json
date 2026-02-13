@@ -6,18 +6,22 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}/src/wallet/frontend",
-      "preLaunchTask": "vite-dev"
+      "webRoot": "${workspaceFolder}/src/wallet/frontend"
     },
     {
       "name": "Debug wallet backend",
       "type": "debugpy",
-      "request": "launch",
-      "module": "quart",
-      "cwd": "${workspaceFolder}/src/wallet/backend",
-      "args": ["--app", "src.app:app", "run", "--port", "5000", "--reload"],
-      "jinja": true,
-      "justMyCode": true,
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/src/wallet/backend",
+          "remoteRoot": "/app/backend"
+        }
+      ],
       "subProcess": true
     }
   ],
