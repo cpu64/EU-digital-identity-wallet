@@ -13,7 +13,7 @@ services:
       - QUART_ENV=development
       - QUART_APP=src.app:app
     command: >
-      sh -c "python -m debugpy --listen 0.0.0.0:5678 -m quart run --host 0.0.0.0 --port 5000 --reload"
+      sh -c "uv run python -m debugpy --listen 0.0.0.0:5678 -m quart run --host 0.0.0.0 --port 5000 --reload"
 
   frontend:
     build:

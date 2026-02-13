@@ -1,19 +1,18 @@
 FROM cpu64/python3.13_postgresql
 
 RUN apt-get update && \
-    apt-get install -y curl && \
+    apt-get install -y curl ca-certificates && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
-ENV PATH="/root/.local/bin:$PATH"
+ADD https://astral.sh/uv/install.sh /uv-installer.sh
+
+RUN sh /uv-installer.sh && rm /uv-installer.sh
+ENV PATH="/root/.local/bin/:$PATH"
 
 WORKDIR /app/backend
 
-COPY pyproject.toml poetry.lock ./
+COPY . /app/backend
 
-RUN poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi --no-root
-
-RUN pip install debugpy
+RUN uv sync --locked
 
 COPY . .
