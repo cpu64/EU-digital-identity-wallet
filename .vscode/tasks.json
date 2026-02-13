@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "docker-dev",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/src/wallet && docker compose up --build",
+      "isBackground": true
+    }
+  ]
+}

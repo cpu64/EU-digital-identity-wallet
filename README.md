@@ -1,3 +1,11 @@
+Digital identity wallet
+--
+
+For launching the core wallet app, see [here](src/wallet/README.md).
+
+Motivation cat
+--
+
 ```
 @######################################################**********************@
 @----=========================================------------------------:::::::@
