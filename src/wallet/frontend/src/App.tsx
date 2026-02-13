@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import { Button } from "./components/ui/button";
 
 async function fetchRandom(): Promise<number> {
   try {
@@ -17,13 +18,13 @@ function App() {
 
   return (
     <>
-      <button
+      <Button
         onClick={async () => {
           setNumber(await fetchRandom());
         }}
       >
         random number is {number}
-      </button>
+      </Button>
     </>
   );
 }
