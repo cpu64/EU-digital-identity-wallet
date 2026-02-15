@@ -1,0 +1,80 @@
+services:
+  club:
+    build: ./club
+    image: cpu64/club:latest
+    container_name: club
+    environment:
+      SERVICE_NAME: "The relying party service"
+    expose:
+      - "8000"
+    networks:
+      - app-net
+
+  lotp:
+    build: ./lotp
+    image: cpu64/lotp:latest
+    container_name: lotp
+    environment:
+      SERVICE_NAME: "List of trusted providers service"
+    expose:
+      - "8000"
+    networks:
+      - app-net
+
+  pidp:
+    build: ./pidp
+    image: cpu64/pidp:latest
+    container_name: pidp
+    environment:
+      SERVICE_NAME: "PID provider service"
+    expose:
+      - "8000"
+    networks:
+      - app-net
+
+  server-1984:
+    build: ./server-1984
+    image: cpu64/server-1984:latest
+    container_name: server-1984
+    environment:
+      SERVICE_NAME: "Backend service"
+    expose:
+      - "8000"
+    networks:
+      - app-net
+
+  wallet-1984:
+    build: ./wallet-1984
+    image: cpu64/wallet-1984:latest
+    container_name: wallet-1984
+    environment:
+      SERVICE_NAME: "Frontend service"
+    expose:
+      - "8000"
+    networks:
+      - app-net
+
+  dns:
+    build: ./dns
+    image: cpu64/dns:latest
+    container_name: dns
+    ports:
+      - "80:80"
+    depends_on:
+      - club
+      - lotp
+      - pidp
+      - server-1984
+      - wallet-1984
+    networks:
+      app-net:
+        aliases:
+          - lotp.test
+          - club.test
+          - lotp.test
+          - pidp.test
+          - server-1984.test
+          - wallet-1984.test
+
+networks:
+  app-net:
