@@ -1,0 +1,21 @@
+[ req ]
+distinguished_name = dn
+req_extensions = v3_req
+prompt = no
+
+[ dn ]
+CN = *.test
+
+[ v3_req ]
+basicConstraints = CA:false
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = *.test
+DNS.2 = club.test
+DNS.3 = lotp.test
+DNS.4 = pidp.test
+DNS.5 = server-1984.test
+DNS.6 = wallet-1984.test

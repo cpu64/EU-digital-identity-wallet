@@ -9,6 +9,8 @@ services:
       - "8000"
     networks:
       - app-net
+    volumes:
+      - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
 
   lotp:
     build: ./lotp
@@ -20,6 +22,8 @@ services:
       - "8000"
     networks:
       - app-net
+    volumes:
+      - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
 
   pidp:
     build: ./pidp
@@ -31,6 +35,8 @@ services:
       - "8000"
     networks:
       - app-net
+    volumes:
+      - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
 
   server-1984:
     build: ./server-1984
@@ -42,6 +48,8 @@ services:
       - "8000"
     networks:
       - app-net
+    volumes:
+      - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
 
   wallet-1984:
     build: ./wallet-1984
@@ -60,6 +68,7 @@ services:
     container_name: dns
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - club
       - lotp
@@ -75,6 +84,9 @@ services:
           - pidp.test
           - server-1984.test
           - wallet-1984.test
+    volumes:
+      - ./certs/wildcard.test.crt:/etc/nginx/certs/wildcard.test.crt:ro
+      - ./certs/wildcard.test.key:/etc/nginx/certs/wildcard.test.key:ro
 
 networks:
   app-net:

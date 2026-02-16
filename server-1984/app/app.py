@@ -5,10 +5,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 SERVICE_NAME = os.getenv("SERVICE_NAME", "Unknown Service")
 
 URLS = [
-    "http://club.test",
-    "http://lotp.test",
-    "http://pidp.test",
-    "http://wallet-1984.test"
+    "https://club.test",
+    "https://lotp.test",
+    "https://pidp.test",
+    "https://wallet-1984.test"
 ]
 
 class Handler(BaseHTTPRequestHandler):

@@ -1,0 +1,13 @@
+[ req ]
+distinguished_name = dn
+x509_extensions = v3_ca
+prompt = no
+
+[ dn ]
+CN = Wallet Dev Root CA
+
+[ v3_ca ]
+basicConstraints = critical, CA:true
+keyUsage = critical, keyCertSign, cRLSign
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
