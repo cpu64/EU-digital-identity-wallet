@@ -4,7 +4,7 @@ req_extensions = v3_req
 prompt = no
 
 [ dn ]
-CN = *.test
+CN = *.wallet.test
 
 [ v3_req ]
 basicConstraints = CA:false
@@ -13,9 +13,5 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [ alt_names ]
-DNS.1 = *.test
-DNS.2 = club.test
-DNS.3 = lotp.test
-DNS.4 = pidp.test
-DNS.5 = server-1984.test
-DNS.6 = wallet-1984.test
+DNS.1 = *.wallet.test
+DNS.2 = wallet.test

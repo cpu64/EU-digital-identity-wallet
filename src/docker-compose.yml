@@ -1,92 +1,91 @@
 services:
-  club:
-    build: ./club
-    image: cpu64/club:latest
-    container_name: club
+  relying-party:
+    build: ./relying-party
+    image: cpu64/relying-party:latest
+    container_name: relying-party
     environment:
       SERVICE_NAME: "The relying party service"
     expose:
       - "8000"
     networks:
-      - app-net
+      - wallet-net
     volumes:
       - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
 
-  lotp:
-    build: ./lotp
-    image: cpu64/lotp:latest
-    container_name: lotp
+  trusted-list:
+    build: ./trusted-list
+    image: cpu64/trusted-list:latest
+    container_name: trusted-list
     environment:
       SERVICE_NAME: "List of trusted providers service"
     expose:
       - "8000"
     networks:
-      - app-net
+      - wallet-net
     volumes:
       - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
 
-  pidp:
-    build: ./pidp
-    image: cpu64/pidp:latest
-    container_name: pidp
+  pid-provider:
+    build: ./pid-provider
+    image: cpu64/pid-provider:latest
+    container_name: pid-provider
     environment:
       SERVICE_NAME: "PID provider service"
     expose:
       - "8000"
     networks:
-      - app-net
+      - wallet-net
     volumes:
       - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
 
-  server-1984:
-    build: ./server-1984
-    image: cpu64/server-1984:latest
-    container_name: server-1984
+  wallet-backend:
+    build: ./wallet-backend
+    image: cpu64/wallet-backend:latest
+    container_name: wallet-backend
     environment:
       SERVICE_NAME: "Backend service"
     expose:
       - "8000"
     networks:
-      - app-net
+      - wallet-net
     volumes:
       - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
 
-  wallet-1984:
-    build: ./wallet-1984
-    image: cpu64/wallet-1984:latest
-    container_name: wallet-1984
+  wallet-frontend:
+    build: ./wallet-frontend
+    image: cpu64/wallet-frontend:latest
+    container_name: wallet-frontend
     environment:
       SERVICE_NAME: "Frontend service"
     expose:
       - "8000"
     networks:
-      - app-net
+      - wallet-net
 
-  dns:
-    build: ./dns
-    image: cpu64/dns:latest
-    container_name: dns
+  reverse-proxy:
+    build: ./reverse-proxy
+    image: cpu64/reverse-proxy:latest
+    container_name: reverse-proxy
     ports:
       - "80:80"
       - "443:443"
     depends_on:
-      - club
-      - lotp
-      - pidp
-      - server-1984
-      - wallet-1984
+       - relying-party
+       - trusted-list
+       - pid-provider
+       - wallet-backend
+       - wallet-frontend
     networks:
-      app-net:
+      wallet-net:
         aliases:
-          - lotp.test
-          - club.test
-          - lotp.test
-          - pidp.test
-          - server-1984.test
-          - wallet-1984.test
+          - relying-party.wallet.test
+          - trusted-list.wallet.test
+          - pid-provider.wallet.test
+          - wallet-backend.wallet.test
+          - wallet-frontend.wallet.test
     volumes:
       - ./certs/wildcard.test.crt:/etc/nginx/certs/wildcard.test.crt:ro
       - ./certs/wildcard.test.key:/etc/nginx/certs/wildcard.test.key:ro
 
 networks:
-  app-net:
+  wallet-net:

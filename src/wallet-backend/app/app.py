@@ -5,11 +5,12 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 SERVICE_NAME = os.getenv("SERVICE_NAME", "Unknown Service")
 
 URLS = [
-    "https://club.test",
-    "https://lotp.test",
-    "https://pidp.test",
-    "https://wallet-1984.test"
+    "https://relying-party.wallet.test",
+    "https://trusted-list.wallet.test",
+    "https://pid-provider.wallet.test",
+    "https://wallet-frontend.wallet.test"
 ]
+
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):

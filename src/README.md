@@ -1,19 +1,19 @@
 ## Naming
-* club - The relying party
-* lotp - List of trusted PID providers
-* pidp - PID provider
-* server-1984 - Backend
-* wallet-1984 - Frontend
-* dns - Nginx based proxy for our infrastructure (only used for demos)
+* relying-party - The relying party
+* trusted-list - List of trusted PID providers
+* pid-provider - PID provider
+* wallet-backend - Backend
+* wallet-frontend - Frontend
+* reverse-proxy - Nginx based proxy for our infrastructure (only used for demos)
 
 ## Dependencies
 Add this to your `/etc/hosts` (or `C:\Windows\System32\drivers\etc\hosts` on windows):
 ```
-127.0.0.1 club.test
-127.0.0.1 lotp.test
-127.0.0.1 pidp.test
-127.0.0.1 server-1984.test
-127.0.0.1 wallet-1984.test
+127.0.0.1 relying-party.wallet.test
+127.0.0.1 trusted-list.wallet.test
+127.0.0.1 pid-provider.wallet.test
+127.0.0.1 wallet-backend.wallet.test
+127.0.0.1 wallet-frontend.wallet.test
 ```
 
 Install the root CA certificate `certs/root-ca.crt` on your system:
