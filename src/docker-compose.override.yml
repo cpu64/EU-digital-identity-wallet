@@ -1,0 +1,20 @@
+services:
+  relying-party:
+    volumes:
+      - ./relying-party/app:/app
+
+  trusted-list:
+    volumes:
+      - ./trusted-list/app:/app
+
+  pid-provider:
+    volumes:
+      - ./pid-provider/app:/app
+
+  wallet-backend:
+    volumes:
+      - ./wallet-backend/app:/app
+
+  wallet-frontend:
+    volumes:
+      - ./wallet-frontend/build:/usr/share/nginx/html

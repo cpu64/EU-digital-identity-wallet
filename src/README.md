@@ -42,7 +42,11 @@ docker compose pull
 ```
 docker compose build
 ```
-## Run:
+## Run (dev with mounted source code):
 ```
 docker compose up
+```
+## Run (prod with code in docker images):
+```
+docker compose -f docker-compose.yml up
 ```
