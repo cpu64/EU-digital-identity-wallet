@@ -36,11 +36,11 @@ Install the root CA certificate `certs/root-ca.crt` on your system:
 
 ## Without building:
 ```
-docker compose pull
+docker compose -f docker-compose.yml pull
 ```
 ## Build:
 ```
-docker compose build
+docker compose -f docker-compose.yml build
 ```
 ## Run (dev with mounted source code):
 ```
