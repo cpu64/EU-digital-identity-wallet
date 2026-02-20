@@ -10,8 +10,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build all images
-        run: cd src && docker compose build
+      - name: Build prod images
+        run: cd src && docker compose build -f docker-compose.yml
+
+      - name: Build dev images
+        run: cd src && docker compose build -f docker-compose.dev.yml
 
   lint-wallet:
     name: Build and lint wallet service
