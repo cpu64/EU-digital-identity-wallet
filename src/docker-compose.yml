@@ -50,6 +50,7 @@ services:
       - wallet-net
     volumes:
       - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
+    command: sh -c "uv run python -m hypercorn app.app:app --bind 0.0.0.0:8000"
 
   wallet-frontend:
     build: ./wallet-frontend

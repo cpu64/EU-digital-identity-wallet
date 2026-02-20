@@ -1,0 +1,22 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = [{ name = "k688", email = "k688@k688.c" }]
+requires-python = ">=3.13"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = ["debugpy>=1.8.20", "quart (>=0.20.0,<0.21.0)"]
+
+[tool.uv]
+
+[tool.uv.build-backend]
+module-name = ["app"]
+module-root = ""
+
+[build-system]
+requires = ["uv_build>=0.10.2,<0.11.0"]
+build-backend = "uv_build"

@@ -4,7 +4,9 @@ import { Button } from "./components/ui/button";
 
 async function fetchRandom(): Promise<number> {
   try {
-    const response = await fetch("/wallet/random/");
+    const response = await fetch(
+      "https://wallet-backend.wallet.test/wallet/random/",
+    );
     const contents = await response.json();
     return contents.number;
   } catch (error) {

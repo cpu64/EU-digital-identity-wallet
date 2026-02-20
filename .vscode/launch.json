@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug wallet frontend",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://wallet-frontend.wallet.test",
+      "webRoot": "${workspaceFolder}/src/wallet-frontend"
+    },
+    {
+      "name": "Debug wallet backend",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "wallet-backend.wallet.test",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/src/wallet-backend",
+          "remoteRoot": "/app"
+        }
+      ],
+      "subProcess": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug wallet",
+      "configurations": ["Debug wallet backend", "Debug wallet frontend"]
+    }
+  ]
+}
