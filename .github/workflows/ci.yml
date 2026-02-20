@@ -35,4 +35,4 @@ jobs:
 
       - name: Lint backend
         run: uvx flake8 . --show-source --statistics
-        working-directory: ./src/wallet-backend/src
+        working-directory: ./src/wallet-backend/app
