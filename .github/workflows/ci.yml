@@ -14,7 +14,7 @@ jobs:
         run: cd src && docker compose -f docker-compose.yml build
 
       - name: Build dev images
-        run: cd src && docker compose -f docker-compose.dev.yml build
+        run: cd src && docker compose -f docker-compose.yml -f docker-compose.dev.yml build
 
   lint-wallet:
     name: Build and lint wallet service
