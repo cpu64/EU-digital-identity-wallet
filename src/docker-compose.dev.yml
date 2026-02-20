@@ -13,7 +13,14 @@ services:
 
   wallet-backend:
     volumes:
-      - ./wallet-backend/app:/app
+      - ./wallet-backend:/app
+    environment:
+      - QUART_ENV=development
+      - QUART_APP=app.app:app
+    expose:
+      - 8000
+      - 5678
+    command: sh -c "uv run python -m debugpy --listen 0.0.0.0:5678 -m quart run --host 0.0.0.0 --port 8000"
 
   wallet-frontend:
     image: node:25-alpine

@@ -5,7 +5,7 @@
       "name": "Debug wallet frontend",
       "type": "chrome",
       "request": "launch",
-      "url": "http://wallet-frontend.wallet.test:8000",
+      "url": "http://wallet-frontend.wallet.test",
       "webRoot": "${workspaceFolder}/src/wallet-frontend"
     },
     {

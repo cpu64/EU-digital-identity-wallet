@@ -14,3 +14,5 @@ WORKDIR /app
 COPY . /app
 
 RUN uv sync --locked
+
+COPY . .
