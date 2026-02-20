@@ -16,6 +16,7 @@ export default defineConfig({
       "/wallet": {
         target: "https://wallet-backend.wallet.test",
         changeOrigin: true,
+        secure: false,
       },
     },
     host: true,
