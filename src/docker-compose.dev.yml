@@ -6,6 +6,7 @@ services:
   trusted-list:
     volumes:
       - ./trusted-list/app:/app
+    command: sh -c 'update-ca-certificates && hypercorn app:app --bind "0.0.0.0:8000" --reload'
 
   pid-provider:
     volumes:

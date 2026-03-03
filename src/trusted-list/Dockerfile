@@ -6,6 +6,10 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY app/app.py .
+COPY requirements.txt .
 
-CMD update-ca-certificates && python app.py
+RUN pip install --prefer-binary --no-cache-dir --break-system-packages --root-user-action ignore -r requirements.txt
+
+COPY app/ .
+
+CMD update-ca-certificates && hypercorn app:app --bind "0.0.0.0:8000"
