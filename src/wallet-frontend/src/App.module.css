@@ -1,0 +1,13 @@
+.appWrapper {
+  background-color: #1b1b1b;
+  min-height: 100vh;
+}
+
+.mainContent {
+  margin-top: 56px;
+  margin-left: 220px;
+  padding: 24px;
+  min-height: calc(100vh - 56px);
+  background-color: #1b1b1b;
+  color: #eaeaea;
+}

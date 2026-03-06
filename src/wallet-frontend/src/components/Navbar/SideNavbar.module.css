@@ -1,0 +1,92 @@
+.sideNavbar {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  bottom: 0;
+  width: 220px;
+  background-color: var(--secondary);
+  border-right: 1px solid var(--tertiary);
+  padding: 16px 0;
+  z-index: 99;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.navItem {
+  padding: 0 8px;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: var(--light-1);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 400;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.navLink:hover {
+  background-color: var(--tertiary);
+  color: var(--light-2);
+}
+
+.navLink.active {
+  background-color: var(--accent-2);
+  color: var(--light-2);
+  font-weight: 500;
+}
+
+.navIcon {
+  flex-shrink: 0;
+}
+
+.navLabel {
+  white-space: nowrap;
+}
+
+.logoutContainer {
+  padding: 0 8px;
+  border-top: 1px solid var(--tertiary);
+  padding-top: 12px;
+  margin-top: auto;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  width: 100%;
+  border: none;
+  background: none;
+  color: var(--accent-1);
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.logoutButton:hover {
+  background-color: var(--tertiary);
+  color: var(--warning);
+}

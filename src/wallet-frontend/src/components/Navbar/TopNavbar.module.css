@@ -1,0 +1,42 @@
+.topNavbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background-color: var(--secondary);
+  border-bottom: 1px solid var(--tertiary);
+  z-index: 100;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 32px;
+  width: auto;
+}
+
+.profileButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--tertiary);
+  color: var(--light-1);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profileButton:hover {
+  background-color: var(--gray-1);
+}
