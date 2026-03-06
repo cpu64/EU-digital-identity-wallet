@@ -1,8 +1,9 @@
+import os
 import secrets
 import argon2
 from app import db
-from quart import jsonify, Quart, current_app, request
-from quart_auth import QuartAuth
+from quart import Response, jsonify, Quart, current_app, request
+from quart_auth import QuartAuth, login_required, current_user
 
 app = Quart(__name__)
 app.config["QUART_AUTH_MODE"] = "bearer"
@@ -12,13 +13,24 @@ auth = QuartAuth(app)
 @app.before_serving
 async def startup():
     app.db_engine = await db.init_db()
+    app.blob_dir = "blob"
+    os.mkdir(app.blob_dir)
 
 @app.after_serving
 async def shutdown():
     await app.db_engine.dispose()
 
 def is_user_request_valid(req):
-    return req is not None and "username" in req and "password" in req
+    return req is not None \
+        and "username" in req \
+        and "password" in req \
+        and isinstance(req["username"], str) \
+        and isinstance(req["password"], str)
+
+def is_blob_request_valid(req):
+    return req is not None \
+        and "blob" in req \
+        and isinstance(req["blob"], str)
 
 @app.route("/api/register", methods=["POST"])
 async def register():
@@ -59,6 +71,32 @@ async def login():
 
     token = auth.dump_token(user["username"])
     return jsonify({"token": token})
+
+@app.route("/api/get_blob", methods=["GET"])
+@login_required
+async def get_blob():
+    username = current_user.auth_id
+    
+    try:
+        blob = await db.get_blob(current_app.db_engine, username, current_app.blob_dir)
+        return jsonify({"blob": blob})
+    except Exception:
+        return Response(status=500)
+
+@app.route("/api/store_blob", methods=["POST"])
+@login_required
+async def store_blob():
+    username = current_user.auth_id
+    req = await request.get_json()
+
+    if not is_blob_request_valid(req):
+        return jsonify({"success": False, "status": "Invalid input JSON"}), 400
+
+    try:
+        await db.write_blob(current_app.db_engine, username, current_app.blob_dir, req["blob"])
+        return jsonify({"success": True, "status": "Blob stored successfully"})
+    except Exception:
+        return jsonify({"success": False, "status": "Failed to store blob"}), 500
 
 if __name__ == "__main__":
     app.run()

@@ -55,25 +55,26 @@ async def get_user(engine: AsyncEngine, username: str):
                 }
 
 async def get_blob(engine: AsyncEngine, username: str, blob_dir: str):
-    blob_name = ""
     user = await get_user(engine, username)
 
     if user is None:
         raise Exception("User not found")
 
-    blob_name = os.path.join(blob_dir, user["blob_id"])
+    blob_name = os.path.join(blob_dir, str(user["blob_id"]))
+    
+    if not os.path.isfile(blob_name):
+        return ""
 
     async with aiofiles.open(blob_name, mode="r") as file:
         return await file.read()
 
 async def write_blob(engine: AsyncEngine, username: str, blob_dir: str, blob: str):
-    blob_name = ""
     user = await get_user(engine, username)
 
     if user is None:
         raise Exception("User not found")
 
-    blob_name = os.path.join(blob_dir, user["blob_id"])
+    blob_name = os.path.join(blob_dir, str(user["blob_id"]))
 
     async with aiofiles.open(blob_name, mode="w") as file:
         await file.write(blob)    
