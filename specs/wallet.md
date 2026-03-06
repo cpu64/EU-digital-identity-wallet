@@ -82,7 +82,7 @@ Parameters (bearer token must be supplied in headers):
 
 Returns a success/failure response with a status message for possible errors.
 
-Response (200 OK and 500 Internal Server Error):
+Response (200 OK / 400 Bad Request / 500 Internal Server Error):
 
 ```
 {
@@ -110,4 +110,4 @@ Response (200 OK):
 }
 ```
 
-Service may also respond with `401 Unauthorized` if the bearer token was invalid or unspecified.
+Service may also respond with `401 Unauthorized` if the bearer token was invalid or unspecified, or `500 Internal Server Error` if something backend-ish broke (e.g. blob read permissions were screwed up).
