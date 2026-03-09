@@ -29,14 +29,39 @@ services:
     build: ./pid-provider
     image: cpu64/pid-provider:latest
     container_name: pid-provider
+    depends_on:
+      pid-db:
+        condition: service_healthy
     environment:
       SERVICE_NAME: "PID provider service"
+      PGHOST: pid-db
+      PGUSER: postgres
+      PGPASSWORD: password
+      PGDATABASE: piddb
+      PGPORT: "5432"
     expose:
       - "8000"
     networks:
       - wallet-net
     volumes:
       - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
+
+  pid-db:
+    image: postgres:18-alpine
+    container_name: pid-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: piddb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d piddb"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - wallet-net
+    volumes:
+      - ./pid-provider/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
   wallet-backend:
     build: ./wallet-backend
@@ -48,6 +73,8 @@ services:
       - "8000"
     networks:
       - wallet-net
+    ports:
+      - "5433:5432"
     volumes:
       - ./certs/root-ca.crt:/usr/local/share/ca-certificates/root-ca.crt:ro
     command: sh -c "uv run python -m hypercorn app.app:app --bind 0.0.0.0:8000"
