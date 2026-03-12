@@ -1,0 +1,14 @@
+{
+  "name": "relying-party",
+  "version": "1.0.0",
+  "description": "Hot Sauce Shop – EUDI Wallet demo relying party",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "better-sqlite3": "^9.4.3"
+  }
+}
