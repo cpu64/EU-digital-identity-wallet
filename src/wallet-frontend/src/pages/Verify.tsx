@@ -10,7 +10,11 @@ type VerificationRequest = {
 };
 
 function Verify() {
-  const [jsonInput, setJsonInput] = useState("");
+  const [jsonInput, setJsonInput] = useState(`{
+    "credentialType": "EuropeanDigitalIdentity",
+    "requestedAttributes": ["Given Name", "Family Name", "Date of Birth"],
+    "relyingParty": "Airport Border Control"
+}`);
   const [error, setError] = useState("");
   const [request, setRequest] = useState<VerificationRequest | null>(null);
   const [matchedCredential, setMatchedCredential] = useState<Credential | null>(
