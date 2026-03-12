@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { ShoppingCart, Trash2 } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@radix-ui/react-separator'
 import * as cart from '@/services/cart'
 
 function fmt(cents) { return `€${(cents / 100).toFixed(2)}` }
