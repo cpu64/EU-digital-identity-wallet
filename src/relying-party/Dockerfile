@@ -30,7 +30,7 @@ COPY --from=build /build/node_modules ./node_modules
 COPY --from=build /build/frontend/dist ./dist
 
 # Server source
-COPY app/server.js app/wallet.js app/package.json ./
+COPY app/server.js app/package.json ./
 
 RUN mkdir -p /data
 

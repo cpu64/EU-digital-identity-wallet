@@ -3,7 +3,6 @@
 const express = require("express");
 const path = require("path");
 const Database = require("better-sqlite3");
-const wallet = require("./wallet");
 
 // ---------------------------------------------------------------------------
 // Database setup
@@ -137,8 +136,7 @@ app.get("/api/products/:id", (req, res) => {
  * after SCRUM-17 integration so the frontend can switch behaviour without code changes.
  */
 app.get("/api/wallet/mode", async (_req, res) => {
-    const result = await wallet.requestAgeOver18();
-    res.json({ mode: result.mode });
+    res.json({ mode: "mock" });
 });
 
 /**

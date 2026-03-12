@@ -60,7 +60,7 @@ export function ProductPage() {
 
             <div className="grid md:grid-cols-2 gap-8 mb-12">
                 <div className="aspect-square bg-muted rounded-2xl overflow-hidden border">
-                    <img src={`https://placehold.co/800x800/ffffff/ea580c?text=${encodeURIComponent(product.name)}`} alt={product.name} className="w-full h-full object-cover" />
+                    <img src={`/images/products/${product.id}.jpg`} alt={product.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex flex-col justify-center py-4">
                     {extreme && <Badge variant="destructive" className="w-fit mb-4 text-sm">Extreme — 18+ Verification Required</Badge>}

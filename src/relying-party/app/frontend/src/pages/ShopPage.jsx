@@ -9,7 +9,7 @@ function fmtScoville(n) { return n.toLocaleString('en-US') }
 
 function ProductCard({ product }) {
     const extreme = product.scoville > 1_000_000
-    const imgUrl = `https://placehold.co/400x400/ffffff/ea580c?text=${encodeURIComponent(product.name)}`
+    const imgUrl = `/images/products/${product.id}.jpg`
 
     return (
         <div className={`group relative flex flex-col border rounded-2xl bg-card overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${extreme ? 'ring-1 ring-destructive/30' : ''}`}>
