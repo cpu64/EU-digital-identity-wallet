@@ -4,6 +4,7 @@ import SideNavbar from "./components/Navbar/SideNavbar";
 import styles from "./App.module.css";
 import Credentials from "./pages/Credentials";
 import CredentialDetail from "./pages/CredentialDetail";
+import Verify from "./pages/Verify";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<Navigate to="/credentials" replace />} />
           <Route path="/credentials" element={<Credentials />} />
           <Route path="/credentials/:id" element={<CredentialDetail />} />
+          <Route path="/verify" element={<Verify />} />
         </Routes>
       </main>
     </div>

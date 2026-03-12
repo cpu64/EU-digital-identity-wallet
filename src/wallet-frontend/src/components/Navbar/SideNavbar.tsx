@@ -1,9 +1,16 @@
 import { NavLink } from "react-router-dom";
-import { CreditCard, QrCode, Settings, LogOut } from "lucide-react";
+import {
+  CreditCard,
+  QrCode,
+  Settings,
+  LogOut,
+  ShieldCheck,
+} from "lucide-react";
 import styles from "./SideNavbar.module.css";
 
 const navItems = [
   { to: "/credentials", icon: CreditCard, label: "Credentials" },
+  { to: "/verify", icon: ShieldCheck, label: "Verify" },
   { to: "/scan", icon: QrCode, label: "Scan" },
   { to: "/settings", icon: Settings, label: "Settings" },
 ];
