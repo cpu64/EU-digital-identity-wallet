@@ -6,11 +6,11 @@ from jwcrypto import jwk
 from sd_jwt.issuer import SDJWTIssuer
 from sd_jwt.common import SDObj
 
-PGUSER = os.getenv('PGUSER', 'postgres')
-PGPASSWORD = os.getenv('PGPASSWORD', 'password')
-PGHOST = os.getenv('PGHOST', 'pid-db')
-PGPORT = os.getenv('PGPORT', '5432')
-PGDATABASE = os.getenv('PGDATABASE', 'piddb')
+PGUSER = os.getenv('PGUSER')
+PGPASSWORD = os.getenv('PGPASSWORD')
+PGHOST = os.getenv('PGHOST')
+PGPORT = os.getenv('PGPORT')
+PGDATABASE = os.getenv('PGDATABASE')
 
 DB_URL = f"postgresql://{PGUSER}:{PGPASSWORD}@{PGHOST}:{PGPORT}/{PGDATABASE}"
 

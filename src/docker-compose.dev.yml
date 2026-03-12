@@ -12,6 +12,10 @@ services:
     volumes:
       - ./pid-provider/app:/app
 
+  pid-db:
+    ports:
+      - "5433:5432"
+
   wallet-backend:
     volumes:
       - ./wallet-backend:/app
