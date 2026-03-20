@@ -20,7 +20,7 @@ The relying party sends a request to the wallet specifying which claims must be 
 ```
 
 ### 2. Wallet receives proof request
-User scans the QR code or copy/pastes the request, then wallet checks if it possess an SD-JWT containing the requested claims and that the request has not expired.
+User scans the QR code or copy/pastes the request, then wallet checks if it possess an SD-JWT containing the requested claims and that the request has not expired. Additionally, checks if the relying party is in the Trusted List and gives a warning if not.
 
 ### 3. Wallet selects claims
 From the SD-JWT disclosures, the wallet selects the claims required to satisfy the relying party’s request.
