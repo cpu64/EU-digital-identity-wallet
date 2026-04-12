@@ -53,7 +53,7 @@ export function ReviewDialog({ open, productId, onClose, onPosted }) {
             <DialogContent className="sm:max-w-lg">
                 {done ? (
                     <div className="text-center py-6 space-y-3">
-                        <div className="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-4">
+                        <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 flex items-center justify-center mx-auto mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                         </div>
                         <p className="text-2xl font-bold">Review posted</p>
@@ -95,7 +95,7 @@ export function ReviewDialog({ open, productId, onClose, onPosted }) {
                             {error && <p className="text-sm text-destructive">{error}</p>}
                         </div>
 
-                        <div className="flex justify-end gap-2 mt-2 pt-4 border-t">
+                        <div className="flex justify-end gap-2 mt-2 pt-4 border-t dark:border-slate-800">
                             <Button variant="outline" onClick={handleClose}>Cancel</Button>
                             <Button onClick={submit} disabled={loading} className="gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" /><path d="M18 12a2 2 0 0 0 0 4h4v-4Z" /></svg>

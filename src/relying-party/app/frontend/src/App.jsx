@@ -3,6 +3,7 @@ import { Routes, Route, Link } from 'react-router-dom'
 import { CartSheet } from '@/components/CartSheet'
 import { CheckoutDialog } from '@/components/CheckoutDialog'
 import { WalletRequestDialog } from '@/components/WalletRequestDialog'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { ShopPage } from '@/pages/ShopPage'
 import { ProductPage } from '@/pages/ProductPage'
 import * as cart from '@/services/cart'
@@ -33,11 +34,14 @@ export default function App() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <header className="sticky top-0 z-40 border-b bg-white">
+        <div className="min-h-screen flex flex-col dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
+            <header className="sticky top-0 z-40 border-b bg-white dark:bg-slate-900 dark:border-slate-800 transition-colors duration-200">
                 <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-                    <Link to="/" className="font-semibold text-sm tracking-tight">Hot Sauce Shop</Link>
-                    <CartSheet onCheckout={startCheckout} />
+                    <Link to="/" className="font-semibold text-sm tracking-tight dark:text-white">Hot Sauce Shop</Link>
+                    <div className="flex items-center gap-4">
+                        <ThemeToggle />
+                        <CartSheet onCheckout={startCheckout} />
+                    </div>
                 </div>
             </header>
 

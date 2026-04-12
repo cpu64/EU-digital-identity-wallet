@@ -12,8 +12,8 @@ function ProductCard({ product }) {
     const imgUrl = `/images/products/${product.id}.jpg`
 
     return (
-        <div className={`group relative flex flex-col border rounded-2xl bg-card overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${extreme ? 'ring-1 ring-destructive/30' : ''}`}>
-            <div className="aspect-square bg-muted overflow-hidden relative border-b">
+        <div className={`group relative flex flex-col border dark:border-slate-800 rounded-2xl bg-card dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${extreme ? 'ring-1 ring-destructive/30' : ''}`}>
+            <div className="aspect-square bg-muted dark:bg-slate-800 overflow-hidden relative border-b dark:border-slate-800">
                 <img src={imgUrl} alt={product.name} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
                 {extreme && <Badge variant="destructive" className="absolute top-2 right-2 shadow-sm bg-destructive/90 backdrop-blur-sm text-sm">Extreme 18+</Badge>}
             </div>
@@ -24,7 +24,7 @@ function ProductCard({ product }) {
                     </Link>
                 </h2>
                 <p className="text-sm text-muted-foreground line-clamp-2 mb-2 flex-1 relative z-10 pointer-events-none">{product.description}</p>
-                <div className="flex items-end justify-between mt-auto relative z-10 pt-2 border-t">
+                <div className="flex items-end justify-between mt-auto relative z-10 pt-2 border-t dark:border-slate-800">
                     <div>
                         <p className="font-bold text-base">{fmt(product.price_cents)}</p>
                         <p className="text-sm font-medium text-muted-foreground">{fmtScoville(product.scoville)} SHU</p>

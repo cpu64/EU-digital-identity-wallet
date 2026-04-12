@@ -59,7 +59,7 @@ export function ProductPage() {
             </Link>
 
             <div className="grid md:grid-cols-2 gap-8 mb-12">
-                <div className="aspect-square bg-muted rounded-2xl overflow-hidden border">
+                <div className="aspect-square bg-muted dark:bg-slate-800 rounded-2xl overflow-hidden border dark:border-slate-800">
                     <img src={`/images/products/${product.id}.jpg`} alt={product.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex flex-col justify-center py-4">
@@ -74,7 +74,7 @@ export function ProductPage() {
                 </div>
             </div>
 
-            <hr className="my-8" />
+            <hr className="my-8 dark:border-slate-800" />
 
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-semibold">Reviews ({reviews.length})</h2>
@@ -88,7 +88,7 @@ export function ProductPage() {
                     {reviews.map(r => {
                         const author = [r.first_name, r.family_name].filter(Boolean).join(' ') || 'Anonymous'
                         return (
-                            <div key={r.id} className="border rounded-lg p-4">
+                            <div key={r.id} className="border dark:border-slate-800 rounded-lg p-4">
                                 <div className="flex items-center gap-2 mb-2">
                                     <span className="text-base font-semibold">{author}</span>
                                     {r.nationality && <span className="text-sm text-muted-foreground">({r.nationality})</span>}

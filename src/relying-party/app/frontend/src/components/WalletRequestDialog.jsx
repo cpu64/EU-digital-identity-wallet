@@ -95,13 +95,13 @@ export function WalletRequestDialog() {
                 </DialogHeader>
                 {requestData && (
                     <div className="space-y-4">
-                        <pre className="bg-muted p-4 rounded-md overflow-x-auto text-xs text-left">
+                        <pre className="bg-muted dark:bg-slate-800 p-4 rounded-md overflow-x-auto text-xs text-left">
                             {requestData.request}
                         </pre>
                         <Button className="w-full font-semibold" onClick={handleCopy}>
                             {copied ? 'Copied!' : 'Copy Request'}
                         </Button>
-                        <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground mt-6 pt-4 border-t">
+                        <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground mt-6 pt-4 border-t dark:border-slate-800">
                             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                             <p className="text-sm">Polling for proof completion...</p>
                         </div>

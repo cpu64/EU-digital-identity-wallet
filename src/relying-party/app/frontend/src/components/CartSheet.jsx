@@ -34,7 +34,7 @@ export function CartSheet({ onCheckout }) {
                 <div className="flex-1 overflow-y-auto px-6 pt-4 space-y-3">
                     {items.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-full text-center space-y-4 pb-12">
-                            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-muted-foreground/50">
+                            <div className="w-16 h-16 rounded-full bg-muted dark:bg-slate-800 flex items-center justify-center text-muted-foreground/50">
                                 <ShoppingCart className="h-8 w-8" />
                             </div>
                             <div>
@@ -66,9 +66,9 @@ export function CartSheet({ onCheckout }) {
                 </div>
 
                 {items.length > 0 && (
-                    <div className="px-6 py-4 border-t space-y-3">
+                    <div className="px-6 py-4 border-t dark:border-slate-800 space-y-3">
                         {cart.hasExtreme() && (
-                            <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2">
+                            <p className="text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded px-3 py-2">
                                 Age verification required for extreme hot sauces at checkout.
                             </p>
                         )}
@@ -80,7 +80,7 @@ export function CartSheet({ onCheckout }) {
                 )}
 
                 {items.length > 0 && (
-                    <div className="pt-4 border-t sticky bottom-0 bg-background pb-6 px-6">
+                    <div className="pt-4 border-t dark:border-slate-800 sticky bottom-0 bg-background dark:bg-slate-950 pb-6 px-6">
                         <Button className="w-full font-semibold gap-2" size="lg" onClick={() => { setOpen(false); onCheckout() }}>
                             Checkout
                         </Button>
