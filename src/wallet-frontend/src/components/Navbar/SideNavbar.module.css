@@ -4,7 +4,7 @@
   left: 0;
   bottom: 0;
   width: 220px;
-  background-color: var(--secondary);
+  background-color: var(--app-surface);
   border-right: 1px solid var(--tertiary);
   padding: 16px 0;
   z-index: 99;
@@ -12,6 +12,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .navList {
