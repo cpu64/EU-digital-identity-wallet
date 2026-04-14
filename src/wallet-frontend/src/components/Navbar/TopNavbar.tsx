@@ -1,7 +1,8 @@
-import { User } from "lucide-react";
+import { User, Sun, Moon } from "lucide-react";
 import styles from "./TopNavbar.module.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/ThemeContext";
 import {
   Dialog,
   DialogContent,
@@ -101,10 +102,14 @@ function TopNavbar({ setToken }: { setToken: (t: string | null) => void }) {
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(e.target as Node)
+      ) {
         setShowProfile(false);
       }
     }
@@ -154,19 +159,28 @@ function TopNavbar({ setToken }: { setToken: (t: string | null) => void }) {
           />
           Walletby
         </div>
-        <div ref={profileRef} className={styles.profileWrapper}>
+        <div className={styles.navActions}>
           <button
-            className={styles.profileButton}
-            aria-label="Profile"
-            onClick={() => setShowProfile((v) => !v)}
+            className={styles.themeToggle}
+            aria-label="Toggle theme"
+            onClick={toggleTheme}
           >
-            <User size={22} />
+            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
           </button>
-          {showProfile && (
-            <div className={styles.profilePopover}>
-              {sessionStorage.getItem("username") || "Unknown user"}
-            </div>
-          )}
+          <div ref={profileRef} className={styles.profileWrapper}>
+            <button
+              className={styles.profileButton}
+              aria-label="Profile"
+              onClick={() => setShowProfile((v) => !v)}
+            >
+              <User size={22} />
+            </button>
+            {showProfile && (
+              <div className={styles.profilePopover}>
+                {sessionStorage.getItem("username") || "Unknown user"}
+              </div>
+            )}
+          </div>
         </div>
       </header>
     </>

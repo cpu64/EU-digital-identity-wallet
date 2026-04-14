@@ -8,19 +8,49 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background-color: var(--secondary);
+  background-color: var(--app-surface);
   border-bottom: 1px solid var(--tertiary);
   z-index: 100;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .logoContainer {
   display: flex;
   align-items: center;
+  color: var(--light-1);
 }
 
 .logo {
   height: 60px;
   width: auto;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.themeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--tertiary);
+  color: var(--light-1);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.themeToggle:hover {
+  background-color: var(--gray-1);
 }
 
 .profileButton {
@@ -49,7 +79,7 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background-color: var(--secondary);
+  background-color: var(--app-surface);
   border: 1px solid var(--tertiary);
   border-radius: 8px;
   padding: 10px 16px;
