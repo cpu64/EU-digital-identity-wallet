@@ -1,6 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { getCredentialById, type Credential } from "@/data/wallet_data";
-import { ArrowLeft } from "lucide-react";
+import {
+  getCredentialById,
+  deleteCredential,
+  type Credential,
+} from "@/data/wallet_data";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import styles from "../components/CredentialsPage/CredentialDetail.module.css";
 import { useEffect, useState } from "react";
 
@@ -14,6 +18,18 @@ function CredentialDetail() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [error, setError] = useState<any>(null);
+
+  const handleDelete = async () => {
+    if (!credential) return;
+    if (!window.confirm("Are you sure you want to delete this credential?"))
+      return;
+    try {
+      await deleteCredential(credential.id);
+      navigate("/credentials");
+    } catch (err: any) {
+      setError(err);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -77,9 +93,14 @@ function CredentialDetail() {
 
       <div className={styles.header}>
         <h1 className={styles.title}>{credential.title}</h1>
-        <span className={`${styles.statusBadge} ${statusClass}`}>
-          {credential.status}
-        </span>
+        <div className={styles.headerActions}>
+          <span className={`${styles.statusBadge} ${statusClass}`}>
+            {credential.status}
+          </span>
+          <button className={styles.deleteButton} onClick={handleDelete}>
+            <Trash2 size={18} /> Delete
+          </button>
+        </div>
       </div>
 
       {/* Subject details */}

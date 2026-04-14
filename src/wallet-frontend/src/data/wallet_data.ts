@@ -114,6 +114,12 @@ export async function addCredential(credential: Credential): Promise<void> {
   await updateData(data);
 }
 
+export async function deleteCredential(id: string): Promise<void> {
+  const data = await getData();
+  data.credentials = data.credentials.filter((c) => c.id !== id);
+  await updateData(data);
+}
+
 export async function addTransaction(transaction: Transaction): Promise<void> {
   const data = await getData();
   data.transactions.push(transaction);

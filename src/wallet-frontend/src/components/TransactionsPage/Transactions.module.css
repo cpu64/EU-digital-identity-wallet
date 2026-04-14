@@ -10,6 +10,57 @@
   color: var(--light-2);
 }
 
+.filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.filterLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-1);
+}
+
+.dateInput {
+  background-color: var(--app-surface);
+  border: 1px solid var(--tertiary);
+  border-radius: 6px;
+  color: var(--light-2);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  color-scheme: dark;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: var(--accent-2);
+}
+
+.clearFilter {
+  background: none;
+  border: 1px solid var(--gray-1);
+  color: var(--gray-1);
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.clearFilter:hover {
+  background-color: var(--tertiary);
+  color: var(--light-2);
+}
+
 .list {
   display: flex;
   flex-direction: column;
