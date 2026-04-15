@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import QRCode from "react-qr-code";
 
 let dialogHandler = null;
 
@@ -94,8 +95,11 @@ export function WalletRequestDialog() {
                     </DialogDescription>
                 </DialogHeader>
                 {requestData && (
-                    <div className="space-y-4">
-                        <pre className="bg-muted dark:bg-slate-800 p-4 rounded-md overflow-x-auto text-xs text-left">
+                    <div className="space-y-4 flex flex-col justify-center items-center">
+                        <div className="bg-white p-4 rounded-xl border">
+                            <QRCode value={requestData.request} size={512} className="h-auto max-w-full" />
+                        </div>
+                        <pre className="w-full bg-muted dark:bg-slate-800 p-4 rounded-md overflow-x-auto text-xs text-left max-h-32">
                             {requestData.request}
                         </pre>
                         <Button className="w-full font-semibold" onClick={handleCopy}>
