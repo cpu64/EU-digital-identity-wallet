@@ -169,9 +169,31 @@ app.post("/api/proof", async (req, res) => {
     if (!proof || typeof proof !== 'string') return res.status(400).json({ error: "Invalid proof format" });
 
     try {
+        const tlRes = await fetch("https://public.trusted-list.wallet.test/api/trusted-list/pid-provider");
+        if (!tlRes.ok) throw new Error("Failed to fetch trusted list");
+        const pidProviders = await tlRes.json();
+
+        if (!pidProviders || pidProviders.length === 0 || !pidProviders[0].public_key) {
+            throw new Error("No trusted PID Providers found");
+        }
+        const fetchedJwk = pidProviders[0].public_key;
+        const publicKey = crypto.createPublicKey({ key: fetchedJwk, format: 'jwk' });
+
+        const verifier = async (data, sig) => {
+            return crypto.verify(
+                'SHA256',
+                Buffer.from(data),
+                { key: publicKey, dsaEncoding: 'ieee-p1363' },
+                Buffer.from(sig, 'base64url')
+            );
+        };
+
         const sdjwt = new SDJwtInstance({
+            verifier,
             hasher: digest
         });
+
+        await sdjwt.verify(proof);
 
         const decoded = await sdjwt.decode(proof);
 

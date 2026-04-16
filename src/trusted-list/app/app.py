@@ -24,9 +24,10 @@ PID_PROVIDER_LIST = [
     "receive_pid_endpoint": "https://public.pid-provider.wallet.test/api/receive-pid",
     "public_key": {
       "kty": "EC",
+      "kid": "JmY7_XfJNBSsduh50apiAI1I1J4pl6M4ajWXhT_expI",
       "crv": "P-256",
-      "x": "c3QTBbjb7tTkH23lAYpP04N8Op6qTwnGftuETv97EGM",
-      "y": "9HhJ9VtmRIJlS6XAWzjP7W0uApQCHbeNJ5lLg6Xs28E",
+      "x": "eo8iaJOBnEHcsLaXCrfN6fyJPSw_pIne9JJExVyQLwU",
+      "y": "bdFUHwR102XktogHZNdIHhYFZMahf8m1eVS0RCtFo7c",
       "alg": "ES256",
       "use": "sig"
     }
