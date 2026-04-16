@@ -12,7 +12,7 @@ digits = 6
 
 
 def get_totp(secret):
-    timestamp = int(time.time())
+    timestamp = int(time.time()) // period
     secret_bytes = base64.b32decode(secret.upper())
     hmac_input = struct.pack(">Q", timestamp)
     sha_hash = hmac.new(secret_bytes, hmac_input, algorithm).digest()

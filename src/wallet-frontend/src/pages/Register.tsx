@@ -128,7 +128,7 @@ function RegisterUser() {
             <br />
             <Field orientation="horizontal">
               <Checkbox
-                onClick={(e) => {
+                onClick={() => {
                   setUsesTotp(!usesTotp);
                   if (!usesTotp) {
                     generateTotpQrCode();

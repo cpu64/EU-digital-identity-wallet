@@ -129,7 +129,7 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
             </Field>
             <br />
             <Field orientation="horizontal">
-              <Checkbox onClick={(e) => setUsesTotp(!usesTotp)} />
+              <Checkbox onClick={() => setUsesTotp(!usesTotp)} />
               <FieldContent>
                 <FieldTitle>
                   I'm using 2-factor authentication via TOTP
