@@ -2,6 +2,7 @@ import os
 import secrets
 import argon2
 from app import db
+from app import totp
 from quart import Response, jsonify, Quart, current_app, request
 from quart_auth import QuartAuth, login_required, current_user
 from quart_cors import cors
@@ -90,8 +91,16 @@ async def register():
                 400,
             )
 
-        await db.create_user(current_app.db_engine, req["username"], password_hash)
-    except Exception:
+        if req["totp"] is None:
+            req["totp"] = ""
+
+        await db.create_user(
+            current_app.db_engine, req["username"], password_hash, req["totp"]
+        )
+    except Exception as e:
+        print(type(e))
+        print(e.args)
+        print(e)
         return (
             jsonify(
                 {
@@ -120,10 +129,29 @@ async def login():
     hasher = argon2.PasswordHasher()
 
     try:
-        print(user["password_hash"])
         hasher.verify(user["password_hash"], req["password"])
     except Exception:
         return jsonify({"error": "Invalid password"}), 400
+
+    if user["totp"] and user["totp"] != "":
+        secret = user["totp"]
+        user_totp = req["totp"]
+
+        if user_totp is None or not user_totp.isdigit() or len(user_totp) != 6:
+            return jsonify({"error": "Malformed TOTP code"}), 400
+
+        try:
+            totp_result = totp.verify_totp(user_totp, secret)
+        except Exception as e:
+            return (
+                jsonify(
+                    {"error": "Internal server error - failed to verify TOTP code"}
+                ),
+                500,
+            )
+
+        if not totp_result:
+            return jsonify({"error": "Invalid or expired TOTP code"}), 400
 
     token = auth.dump_token(user["username"])
     return jsonify({"token": token})

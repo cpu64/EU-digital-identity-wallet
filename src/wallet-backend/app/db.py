@@ -19,6 +19,7 @@ users = Table(
     Column("username", String(32), primary_key=True, nullable=False),
     Column("password_hash", String(128), nullable=False),
     Column("blob_id", Uuid, unique=True, nullable=False),
+    Column("totp", String(32), nullable=True),
 )
 
 
@@ -35,7 +36,9 @@ async def init_db():
     return engine
 
 
-async def create_user(engine: AsyncEngine, username: str, password_hash: str):
+async def create_user(
+    engine: AsyncEngine, username: str, password_hash: str, totp: str
+):
     async with engine.begin() as conn:
         await conn.execute(
             users.insert(),
@@ -43,6 +46,7 @@ async def create_user(engine: AsyncEngine, username: str, password_hash: str):
                 "username": username,
                 "password_hash": password_hash,
                 "blob_id": uuid.uuid4(),
+                "totp": totp,
             },
         )
 
@@ -55,7 +59,12 @@ async def get_user(engine: AsyncEngine, username: str):
         if user is None:
             return None
         else:
-            return {"username": user[0], "password_hash": user[1], "blob_id": user[2]}
+            return {
+                "username": user[0],
+                "password_hash": user[1],
+                "blob_id": user[2],
+                "totp": user[3],
+            }
 
 
 async def get_blob(engine: AsyncEngine, username: str, blob_dir: str):
