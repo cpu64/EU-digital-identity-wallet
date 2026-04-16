@@ -33,17 +33,17 @@ async function handleWalletRequest(requestPayload, options = {}) {
     const specRequest = {
         ...requestPayload,
         nonce,
-        proof_endpoint: `${window.location.origin}/api/proof`,
+        proof_endpoint: `https://public.${window.location.hostname}/api/proof`,
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
     };
 
     const requestJson = JSON.stringify(specRequest, null, 2);
     const request = btoa(requestJson);
 
-    return showWalletRequestDialog({ 
-        request, 
-        nonce, 
-        title: options.title, 
-        description: options.description 
+    return showWalletRequestDialog({
+        request,
+        nonce,
+        title: options.title,
+        description: options.description
     });
 }

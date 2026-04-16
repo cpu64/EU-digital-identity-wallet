@@ -12,8 +12,6 @@
     "ci-dry-run": "npm run lint && npm run typecheck && npm run build"
   },
   "dependencies": {
-    "@signpdf/signer-p12": "^3.3.0",
-    "@signpdf/signpdf": "^3.3.0",
     "@tailwindcss/vite": "^4.1.18",
     "@types/crypto-js": "^4.2.2",
     "bootstrap": "^5.3.8",

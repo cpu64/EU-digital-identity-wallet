@@ -87,6 +87,34 @@
   margin: 0;
 }
 
+.infoMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--app-surface);
+  color: var(--accent-2);
+  padding: 0.85rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent-2);
+  font-size: 0.9rem;
+}
+
+.warningMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--app-surface);
+  color: var(--warning);
+  padding: 0.85rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--warning);
+  font-size: 0.9rem;
+}
+
+.messageIcon {
+  flex-shrink: 0;
+}
+
 .credentialInfo {
   display: flex;
   flex-direction: column;

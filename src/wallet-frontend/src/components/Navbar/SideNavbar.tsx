@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   ArrowLeftRight,
   Building2,
+  Signature,
 } from "lucide-react";
 import styles from "./SideNavbar.module.css";
 
@@ -16,6 +17,7 @@ const navItems = [
   { to: "/verify", icon: ShieldCheck, label: "Verify" },
   { to: "/transactions", icon: ArrowLeftRight, label: "Transactions" },
   { to: "/scan", icon: QrCode, label: "Scan" },
+  { to: "/sign", icon: Signature, label: "Document Signing" },
   { to: "/settings", icon: Settings, label: "Settings" },
 ];
 
