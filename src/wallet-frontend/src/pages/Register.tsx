@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
-import { Field, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import {
   Dialog,
@@ -15,6 +20,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import QRCode from "react-qr-code";
+import { v4 as uuidv4 } from "uuid";
 
 type RegistrationResponse = { success: boolean; status: string };
 
@@ -24,14 +32,31 @@ function RegisterUser() {
   const [open, setOpen] = useState(false);
   const [errorStatus, setErrorStatus] = useState("");
   const navigate = useNavigate();
+  const [totp, setTotp] = useState<string>("");
+  const [usesTotp, setUsesTotp] = useState(false);
+  const [qrCodeLink, setQrCodeLink] = useState<string | undefined>(undefined);
 
-  async function handleLogin(e: React.SyntheticEvent<HTMLFormElement>) {
+  function generateTotpQrCode() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    const secret_length = 32;
+
+    const bytes = new Uint32Array(secret_length);
+    crypto.getRandomValues(bytes);
+    const secret = Array.from(bytes, (b) => chars[b % chars.length]).join("");
+    setTotp(secret);
+
+    const otpLink = `otpauth://totp/walletby:${uuidv4()}?secret=${secret}&issuer=walletby&algorithm=SHA1&digits=6&period=30`;
+    setQrCodeLink(otpLink);
+  }
+
+  async function handleRegister(e: React.SyntheticEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
 
       const request = {
         username: username,
         password: password,
+        totp: totp,
       };
 
       const response = await fetch(
@@ -71,7 +96,7 @@ function RegisterUser() {
           <CardTitle>Register to Walletby</CardTitle>
         </div>
         <CardContent>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleRegister}>
             <Field>
               <FieldLabel htmlFor="text" className="form-label">
                 Username:
@@ -101,11 +126,51 @@ function RegisterUser() {
               />
             </Field>
             <br />
+            <Field orientation="horizontal">
+              <Checkbox
+                onClick={(e) => {
+                  setUsesTotp(!usesTotp);
+                  if (!usesTotp) {
+                    generateTotpQrCode();
+                  }
+                }}
+              />
+              <FieldContent>
+                <FieldTitle>
+                  I'd like to use 2-factor authentication via TOTP (time-based
+                  one-time passwords)
+                </FieldTitle>
+              </FieldContent>
+            </Field>
+            {usesTotp && (
+              <Field style={{ marginTop: "1em" }}>
+                <FieldLabel>
+                  Scan this QR code with your authenticator app to initialize
+                  TOTP
+                </FieldLabel>
+                {qrCodeLink == null && (
+                  <p>Please wait for the QR code to load...</p>
+                )}
+                {qrCodeLink != null && (
+                  <div style={{ background: "white", padding: "16px" }}>
+                    <QRCode value={qrCodeLink} size={300} />
+                  </div>
+                )}
+              </Field>
+            )}
+            <br />
             <CardFooter>
               <Field>
                 <Button type="submit" className="btn btn-primary">
                   Register
                 </Button>
+                <p style={{ marginTop: "2vh" }}>
+                  Already have an account?
+                  <br />
+                  <Button asChild variant="link">
+                    <Link to={"/login"}>Log in</Link>
+                  </Button>
+                </p>
               </Field>
             </CardFooter>
           </form>
