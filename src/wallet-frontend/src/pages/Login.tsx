@@ -1,6 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
-import { Field, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,12 +22,15 @@ import {
 } from "@/components/ui/dialog";
 import { initData } from "@/data/wallet_data";
 import { SHA256 } from "crypto-js";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type LoginResponse = { token: string } | { error: string };
 
 function LoginUser({ setToken }: { setToken: (t: string) => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [totp, setTotp] = useState<string>("");
+  const [usesTotp, setUsesTotp] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -33,6 +41,7 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
       const request = {
         username: username,
         password: password,
+        totp: totp,
       };
 
       const response = await fetch(
@@ -118,6 +127,30 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
                 required
               />
             </Field>
+            <br />
+            <Field orientation="horizontal">
+              <Checkbox onClick={(e) => setUsesTotp(!usesTotp)} />
+              <FieldContent>
+                <FieldTitle>
+                  I'm using 2-factor authentication via TOTP
+                </FieldTitle>
+              </FieldContent>
+            </Field>
+            {usesTotp && (
+              <Field style={{ marginTop: "1em" }}>
+                <FieldLabel htmlFor="totp" className="form-label">
+                  OTP code from your authenticator app
+                </FieldLabel>
+                <Input
+                  onChange={(e) => {
+                    setTotp(e.target.value);
+                  }}
+                  className="form-control"
+                  id="totp"
+                  required
+                ></Input>
+              </Field>
+            )}
             <br />
             <CardFooter>
               <Field>
