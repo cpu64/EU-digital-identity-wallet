@@ -8,6 +8,7 @@ import { ShopPage } from '@/pages/ShopPage'
 import { ProductPage } from '@/pages/ProductPage'
 import * as cart from '@/services/cart'
 import * as wallet from '@/services/wallet'
+import { toast } from 'sonner'
 
 export default function App() {
     const [checkoutOpen, setCheckoutOpen] = useState(false)
@@ -24,6 +25,7 @@ export default function App() {
                     throw new Error("Age verification failed. You must be over 18 to purchase extreme hot sauces.")
                 }
                 setAgeConfirmed(true)
+                toast.success("Age successfully verified with EUDI Wallet")
                 setCheckoutOpen(true)
             } catch (err) {
                 window.alert(err.message)
