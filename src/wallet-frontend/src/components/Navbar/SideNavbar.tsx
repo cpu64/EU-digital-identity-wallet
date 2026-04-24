@@ -10,15 +10,20 @@ import {
   Signature,
 } from "lucide-react";
 import styles from "./SideNavbar.module.css";
+import { useTranslation } from "react-i18next";
 
 const navItems = [
-  { to: "/credentials", icon: CreditCard, label: "Credentials" },
-  { to: "/pid-providers", icon: Building2, label: "PID Providers" },
-  { to: "/verify", icon: ShieldCheck, label: "Verify" },
-  { to: "/transactions", icon: ArrowLeftRight, label: "Transactions" },
-  { to: "/scan", icon: QrCode, label: "Scan" },
-  { to: "/sign", icon: Signature, label: "Document Signing" },
-  { to: "/settings", icon: Settings, label: "Settings" },
+  { to: "/credentials", icon: CreditCard, labelKey: "sidenav.credentials" },
+  { to: "/pid-providers", icon: Building2, labelKey: "sidenav.pid_providers" },
+  { to: "/verify", icon: ShieldCheck, labelKey: "sidenav.verify" },
+  {
+    to: "/transactions",
+    icon: ArrowLeftRight,
+    labelKey: "sidenav.transactions",
+  },
+  { to: "/scan", icon: QrCode, labelKey: "sidenav.scan" },
+  { to: "/sign", icon: Signature, labelKey: "sidenav.document_signing" },
+  { to: "/settings", icon: Settings, labelKey: "sidenav.settings" },
 ];
 
 function removeToken() {
@@ -27,6 +32,7 @@ function removeToken() {
 
 function SideNavbar({ setToken }: { setToken: (t: string | null) => void }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <nav className={styles.sideNavbar}>
@@ -41,7 +47,7 @@ function SideNavbar({ setToken }: { setToken: (t: string | null) => void }) {
               end={item.to === "/"}
             >
               <item.icon size={20} className={styles.navIcon} />
-              <span className={styles.navLabel}>{item.label}</span>
+              <span className={styles.navLabel}>{t(item.labelKey)}</span>
             </NavLink>
           </li>
         ))}
@@ -56,7 +62,7 @@ function SideNavbar({ setToken }: { setToken: (t: string | null) => void }) {
           }}
         >
           <LogOut size={20} className={styles.navIcon} />
-          <span className={styles.navLabel}>Logout</span>
+          <span className={styles.navLabel}>{t("sidenav.logout")}</span>
         </button>
       </div>
     </nav>

@@ -4,12 +4,14 @@ import styles from "../components/CredentialsPage/Credentials.module.css";
 import { Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Credentials() {
   const navigate = useNavigate();
   const [walletData, setWalletData] = useState<WalletData | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useTranslation();
 
   const [error, setError] = useState<any>(null);
 
@@ -27,8 +29,9 @@ function Credentials() {
     fetchData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (loading) return <p>{t("common.loading")}</p>;
+  if (error)
+    return <p>{t("common.error_message", { message: error.message })}</p>;
 
   const filteredCredentials = walletData?.credentials.filter((credential) => {
     const q = searchQuery.toLowerCase();
@@ -45,7 +48,7 @@ function Credentials() {
         <Search size={18} className={styles.searchIcon} />
         <input
           type="text"
-          placeholder="Search credentials..."
+          placeholder={t("credentials.search_placeholder")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className={styles.searchInput}

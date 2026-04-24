@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
 import { addCredential, type Credential } from "@/data/wallet_data";
 import styles from "../components/PidProvidersPage/PidProviders.module.css";
+import { useTranslation } from "react-i18next";
 
 function base64UrlDecode(str: string): string {
   let base64 = str.replace(/-/g, "+").replace(/_/g, "/");
@@ -35,7 +36,7 @@ function parseSdJwt(sdJwt: string): {
     try {
       const [, name, value] = parseDisclosure(d);
       disclosures[name] = value;
-    } catch { }
+    } catch {}
   }
 
   return { header, payload, disclosures };
@@ -55,7 +56,7 @@ const FIELD_LABELS: Record<string, string> = {
   resident_street: "Street",
   resident_house_number: "House Number",
   sex: "Gender",
-  email_address: "Email Address"
+  email_address: "Email Address",
 };
 
 function PidCallback() {
@@ -64,6 +65,7 @@ function PidCallback() {
     "loading",
   );
   const [errorMessage, setErrorMessage] = useState("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function receivePid() {
@@ -74,7 +76,7 @@ function PidCallback() {
         const privateKeyRaw = sessionStorage.getItem("pid_private_key");
 
         if (!passkey || !providerDomain || !receiveEndpoint || !privateKeyRaw) {
-          throw new Error("Missing PID request data. Please try again.");
+          throw new Error(t("pid_callback.missing_data"));
         }
 
         const response = await fetch(receiveEndpoint, {
@@ -92,7 +94,7 @@ function PidCallback() {
 
         const data = await response.json();
         if (!data.pid) {
-          throw new Error("No PID received from provider");
+          throw new Error(t("pid_callback.no_pid"));
         }
 
         const { payload, disclosures } = parseSdJwt(data.pid);
@@ -152,10 +154,10 @@ function PidCallback() {
       <div className={styles.container}>
         <div className={styles.statusSection}>
           <Loader2 size={48} className={styles.statusIcon} />
-          <h2 className={styles.statusTitle}>Receiving your PID...</h2>
-          <p className={styles.statusText}>
-            Retrieving your Personal Identity Document from the provider.
-          </p>
+          <h2 className={styles.statusTitle}>
+            {t("pid_callback.loading_title")}
+          </h2>
+          <p className={styles.statusText}>{t("pid_callback.loading_text")}</p>
         </div>
       </div>
     );
@@ -166,13 +168,15 @@ function PidCallback() {
       <div className={styles.container}>
         <div className={styles.statusSection}>
           <XCircle size={48} className={styles.errorIcon} />
-          <h2 className={styles.statusTitle}>PID Issuance Failed</h2>
+          <h2 className={styles.statusTitle}>
+            {t("pid_callback.error_title")}
+          </h2>
           <p className={styles.statusText}>{errorMessage}</p>
           <button
             className={styles.backButton}
             onClick={() => navigate("/pid-providers")}
           >
-            Try Again
+            {t("pid_callback.try_again")}
           </button>
         </div>
       </div>
@@ -183,15 +187,15 @@ function PidCallback() {
     <div className={styles.container}>
       <div className={styles.statusSection}>
         <CheckCircle size={48} className={styles.successIcon} />
-        <h2 className={styles.statusTitle}>PID Added Successfully!</h2>
-        <p className={styles.statusText}>
-          Your Personal Identity Document has been added to your wallet.
-        </p>
+        <h2 className={styles.statusTitle}>
+          {t("pid_callback.success_title")}
+        </h2>
+        <p className={styles.statusText}>{t("pid_callback.success_text")}</p>
         <button
           className={styles.backButton}
           onClick={() => navigate("/credentials")}
         >
-          View Credentials
+          {t("pid_callback.view_credentials")}
         </button>
       </div>
     </div>

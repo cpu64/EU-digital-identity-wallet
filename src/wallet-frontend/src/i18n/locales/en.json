@@ -1,0 +1,167 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "error_message": "Error: {{message}}",
+    "close": "Close",
+    "try_again": "Try Again"
+  },
+  "login": {
+    "title": "Login to Walletby",
+    "username": "Username:",
+    "password": "Password:",
+    "totp_checkbox": "I'm using 2-factor authentication via TOTP",
+    "totp_label": "OTP code from your authenticator app",
+    "submit": "Log in",
+    "no_account": "Don't have an account?",
+    "create_account": "Create an account",
+    "error_description": "Failed to login. Please check that you have created an account and have entered valid credentials."
+  },
+  "register": {
+    "title": "Register to Walletby",
+    "username": "Username:",
+    "password": "Password:",
+    "totp_checkbox": "I'd like to use 2-factor authentication via TOTP (time-based one-time passwords)",
+    "totp_scan_label": "Scan this QR code with your authenticator app to initialize TOTP",
+    "totp_loading": "Please wait for the QR code to load...",
+    "submit": "Register",
+    "have_account": "Already have an account?",
+    "log_in": "Log in",
+    "error_description": "Failed to register. {{errorStatus}}"
+  },
+  "credentials": {
+    "search_placeholder": "Search credentials..."
+  },
+  "credential_detail": {
+    "back": "Back to credentials",
+    "not_found": "Credential not found.",
+    "delete_confirm": "Are you sure you want to delete this credential?",
+    "subject": "Subject",
+    "metadata": "Metadata",
+    "issuer": "Issuer",
+    "issuer_did": "Issuer DID",
+    "issued": "Issued",
+    "expires": "Expires",
+    "format": "Format",
+    "type": "Type",
+    "delete": "Delete"
+  },
+  "credential_card": {
+    "issuer": "Issuer"
+  },
+  "pid_providers": {
+    "title": "PID Providers",
+    "description": "Select a trusted PID provider to obtain your Personal Identity Document. You will be redirected to the provider to authenticate.",
+    "loading": "Loading providers...",
+    "empty": "No PID providers available.",
+    "load_error": "Failed to load providers",
+    "start_error": "Failed to start PID request"
+  },
+  "pid_callback": {
+    "loading_title": "Receiving your PID...",
+    "loading_text": "Retrieving your Personal Identity Document from the provider.",
+    "error_title": "PID Issuance Failed",
+    "try_again": "Try Again",
+    "view_credentials": "View Credentials",
+    "success_title": "PID Added Successfully!",
+    "success_text": "Your Personal Identity Document has been added to your wallet.",
+    "missing_data": "Missing PID request data. Please try again.",
+    "no_pid": "No PID received from provider",
+    "personal_id": "Personal ID (PID)"
+  },
+  "transactions": {
+    "title": "Transactions",
+    "from": "From",
+    "to": "To",
+    "clear": "Clear",
+    "empty": "No transactions found.",
+    "requester": "Requester",
+    "credential": "Credential",
+    "date": "Date",
+    "status": "Status"
+  },
+  "verify": {
+    "title": "Verify",
+    "paste_label": "Paste a verification request (base64)",
+    "paste_placeholder": "Paste the verification request here...",
+    "decode_button": "Verify",
+    "select_credential": "Select a credential to use:",
+    "issued_by": "Issued by {{name}}",
+    "cancel": "Cancel",
+    "decline": "Decline",
+    "share_claims_one": "Share {{count}} claim",
+    "share_claims_other": "Share {{count}} claims",
+    "claim": "Claim",
+    "value": "Value",
+    "requested_badge": "requested",
+    "submitting": "Submitting proof...",
+    "success_title": "Proof Shared Successfully",
+    "success_text": "The requested claims were shared with {{hostname}}.",
+    "new_verification": "New Verification",
+    "error_title": "Proof Failed",
+    "trusted_party": "Relying party {{name}} is part of the trusted list.",
+    "untrusted_party": "Warning: This relying party is not verified by the trust list.",
+    "err_empty": "Please paste a verification request.",
+    "err_invalid_base64": "Invalid base64 encoding.",
+    "err_invalid_json": "Decoded content is not valid JSON.",
+    "err_missing_fields": "Request must contain requested_claims, nonce, proof_endpoint, and exp.",
+    "err_invalid_url": "Invalid proof_endpoint URL.",
+    "err_expired": "This verification request has expired.",
+    "err_no_credentials": "No credentials in your wallet contain the requested claims."
+  },
+  "scan": {
+    "title": "Scan QR Code",
+    "description": "Scan a verification QR code using your camera. Your browser will ask for camera permission when you start scanning.",
+    "start": "Start Scanning",
+    "stop": "Stop Scanning",
+    "try_again": "Try Again",
+    "point_camera": "Point your camera at a verification QR code",
+    "camera_denied": "Camera access was denied. Please allow camera access in your browser settings and try again."
+  },
+  "sign_document": {
+    "title": "Sign PDF Document",
+    "choose_pdf": "Choose PDF",
+    "err_invalid_pdf": "Please select a valid PDF file.",
+    "err_no_file": "No PDF file selected.",
+    "err_signing_failed": "Signing failed",
+    "signing": "Signing...",
+    "sign_download": "Sign & Download"
+  },
+  "navbar": {
+    "app_name": "Walletby",
+    "toggle_theme": "Toggle theme",
+    "profile": "Profile",
+    "session_expiring_title": "Session expiring soon",
+    "session_expiring_body": "Your session will expire shortly. Choose to continue or you will be logged out automatically.",
+    "continue_session": "Continue session",
+    "log_out": "Log out",
+    "language": "Language"
+  },
+  "sidenav": {
+    "credentials": "Credentials",
+    "pid_providers": "PID Providers",
+    "verify": "Verify",
+    "transactions": "Transactions",
+    "scan": "Scan",
+    "document_signing": "Document Signing",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "claims": {
+    "given_name": "Given Name",
+    "family_name": "Family Name",
+    "birth_date": "Date of Birth",
+    "birthdate": "Date of Birth",
+    "birth_place": "Place of Birth",
+    "nationality": "Nationality",
+    "resident_address": "Address",
+    "resident_country": "Country",
+    "resident_state": "State",
+    "resident_city": "City",
+    "resident_postal_code": "Postal Code",
+    "resident_street": "Street",
+    "resident_house_number": "House Number",
+    "sex": "Gender",
+    "email_address": "Email Address"
+  }
+}

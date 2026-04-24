@@ -23,6 +23,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import QRCode from "react-qr-code";
 import { v4 as uuidv4 } from "uuid";
+import { useTranslation } from "react-i18next";
 
 type RegistrationResponse = { success: boolean; status: string };
 
@@ -35,6 +36,7 @@ function RegisterUser() {
   const [totp, setTotp] = useState<string>("");
   const [usesTotp, setUsesTotp] = useState(false);
   const [qrCodeLink, setQrCodeLink] = useState<string | undefined>(undefined);
+  const { t } = useTranslation();
 
   function generateTotpQrCode() {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
@@ -93,13 +95,13 @@ function RegisterUser() {
           />
         </div>
         <div className={styles.title}>
-          <CardTitle>Register to Walletby</CardTitle>
+          <CardTitle>{t("register.title")}</CardTitle>
         </div>
         <CardContent>
           <form onSubmit={handleRegister}>
             <Field>
               <FieldLabel htmlFor="text" className="form-label">
-                Username:
+                {t("register.username")}
               </FieldLabel>
               <Input
                 onChange={(e) => {
@@ -113,7 +115,7 @@ function RegisterUser() {
             </Field>
             <Field>
               <FieldLabel htmlFor="password" className="form-label">
-                Password:
+                {t("register.password")}
               </FieldLabel>
               <Input
                 onChange={(e) => {
@@ -136,21 +138,13 @@ function RegisterUser() {
                 }}
               />
               <FieldContent>
-                <FieldTitle>
-                  I'd like to use 2-factor authentication via TOTP (time-based
-                  one-time passwords)
-                </FieldTitle>
+                <FieldTitle>{t("register.totp_checkbox")}</FieldTitle>
               </FieldContent>
             </Field>
             {usesTotp && (
               <Field style={{ marginTop: "1em" }}>
-                <FieldLabel>
-                  Scan this QR code with your authenticator app to initialize
-                  TOTP
-                </FieldLabel>
-                {qrCodeLink == null && (
-                  <p>Please wait for the QR code to load...</p>
-                )}
+                <FieldLabel>{t("register.totp_scan_label")}</FieldLabel>
+                {qrCodeLink == null && <p>{t("register.totp_loading")}</p>}
                 {qrCodeLink != null && (
                   <div style={{ background: "white", padding: "16px" }}>
                     <QRCode value={qrCodeLink} size={300} />
@@ -162,13 +156,13 @@ function RegisterUser() {
             <CardFooter>
               <Field>
                 <Button type="submit" className="btn btn-primary">
-                  Register
+                  {t("register.submit")}
                 </Button>
                 <p style={{ marginTop: "2vh" }}>
-                  Already have an account?
+                  {t("register.have_account")}
                   <br />
                   <Button asChild variant="link">
-                    <Link to={"/login"}>Log in</Link>
+                    <Link to={"/login"}>{t("register.log_in")}</Link>
                   </Button>
                 </p>
               </Field>
@@ -180,14 +174,14 @@ function RegisterUser() {
         <DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Error</DialogTitle>
+              <DialogTitle>{t("common.error")}</DialogTitle>
               <DialogDescription>
-                Failed to register. {errorStatus}
+                {t("register.error_description", { errorStatus })}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="sm:justify-center">
               <DialogClose asChild>
-                <Button type="button">Close</Button>
+                <Button type="button">{t("common.close")}</Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>

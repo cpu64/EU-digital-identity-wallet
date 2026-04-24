@@ -23,6 +23,7 @@ import {
 import { initData } from "@/data/wallet_data";
 import { SHA256 } from "crypto-js";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useTranslation } from "react-i18next";
 
 type LoginResponse = { token: string } | { error: string };
 
@@ -33,6 +34,7 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
   const [usesTotp, setUsesTotp] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   async function handleLogin(e: React.SyntheticEvent<HTMLFormElement>) {
     try {
@@ -95,13 +97,13 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
           />
         </div>
         <div className={styles.title}>
-          <CardTitle>Login to Walletby</CardTitle>
+          <CardTitle>{t("login.title")}</CardTitle>
         </div>
         <CardContent>
           <form onSubmit={handleLogin}>
             <Field>
               <FieldLabel htmlFor="text" className="form-label">
-                Username:
+                {t("login.username")}
               </FieldLabel>
               <Input
                 onChange={(e) => {
@@ -115,7 +117,7 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
             </Field>
             <Field>
               <FieldLabel htmlFor="password" className="form-label">
-                Password:
+                {t("login.password")}
               </FieldLabel>
               <Input
                 onChange={(e) => {
@@ -131,15 +133,13 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
             <Field orientation="horizontal">
               <Checkbox onClick={() => setUsesTotp(!usesTotp)} />
               <FieldContent>
-                <FieldTitle>
-                  I'm using 2-factor authentication via TOTP
-                </FieldTitle>
+                <FieldTitle>{t("login.totp_checkbox")}</FieldTitle>
               </FieldContent>
             </Field>
             {usesTotp && (
               <Field style={{ marginTop: "1em" }}>
                 <FieldLabel htmlFor="totp" className="form-label">
-                  OTP code from your authenticator app
+                  {t("login.totp_label")}
                 </FieldLabel>
                 <Input
                   onChange={(e) => {
@@ -155,13 +155,13 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
             <CardFooter>
               <Field>
                 <Button type="submit" className="btn btn-primary">
-                  Log in
+                  {t("login.submit")}
                 </Button>
                 <p style={{ marginTop: "2vh" }}>
-                  Don't have an account?
+                  {t("login.no_account")}
                   <br />
                   <Button asChild variant="link">
-                    <Link to={"/register"}>Create an account</Link>
+                    <Link to={"/register"}>{t("login.create_account")}</Link>
                   </Button>
                 </p>
               </Field>
@@ -173,15 +173,14 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
         <DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Error</DialogTitle>
+              <DialogTitle>{t("common.error")}</DialogTitle>
               <DialogDescription>
-                Failed to login. Please check that you have created an account
-                and have entered valid credentials.
+                {t("login.error_description")}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="sm:justify-center">
               <DialogClose asChild>
-                <Button type="button">Close</Button>
+                <Button type="button">{t("common.close")}</Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>

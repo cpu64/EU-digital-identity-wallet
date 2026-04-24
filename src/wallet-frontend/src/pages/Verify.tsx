@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getData, addTransaction, type Credential } from "@/data/wallet_data";
 import styles from "../components/VerifyPage/Verify.module.css";
 import { ShieldCheck, Loader2, Info, AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type VerificationRequest = {
   requested_claims: string[];
@@ -137,8 +138,11 @@ function Verify() {
   const [matchedClaims, setMatchedClaims] = useState<
     { name: string; label: string; value: string }[]
   >([]);
-  const [isTrustedRelyingParty, setIsTrustedRelyingParty] = useState<boolean | null>(null);
+  const [isTrustedRelyingParty, setIsTrustedRelyingParty] = useState<
+    boolean | null
+  >(null);
   const [relyingPartyName, setRelyingPartyName] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -149,7 +153,7 @@ function Verify() {
     const input = inputOverride ?? base64Input;
 
     if (!input.trim()) {
-      setError("Please paste a verification request.");
+      setError(t("verify.err_empty"));
       return;
     }
 
@@ -157,7 +161,7 @@ function Verify() {
     try {
       json = atob(input.trim());
     } catch {
-      setError("Invalid base64 encoding.");
+      setError(t("verify.err_invalid_base64"));
       return;
     }
 
@@ -165,7 +169,7 @@ function Verify() {
     try {
       parsed = JSON.parse(json);
     } catch {
-      setError("Decoded content is not valid JSON.");
+      setError(t("verify.err_invalid_json"));
       return;
     }
 
@@ -175,21 +179,19 @@ function Verify() {
       !parsed.proof_endpoint ||
       !parsed.exp
     ) {
-      setError(
-        "Request must contain requested_claims, nonce, proof_endpoint, and exp.",
-      );
+      setError(t("verify.err_missing_fields"));
       return;
     }
 
     try {
       new URL(parsed.proof_endpoint);
     } catch {
-      setError("Invalid proof_endpoint URL.");
+      setError(t("verify.err_invalid_url"));
       return;
     }
 
     if (parsed.exp * 1000 < Date.now()) {
-      setError("This verification request has expired.");
+      setError(t("verify.err_expired"));
       return;
     }
 
@@ -218,7 +220,7 @@ function Verify() {
     });
 
     if (matching.length === 0) {
-      setError("No credentials in your wallet contain the requested claims.");
+      setError(t("verify.err_no_credentials"));
       return;
     }
 
@@ -356,13 +358,13 @@ function Verify() {
   return (
     <div className={styles.container}>
       <h1 className={styles.pageTitle}>
-        <ShieldCheck size={28} /> Verify
+        <ShieldCheck size={28} /> {t("verify.title")}
       </h1>
 
       {step === "input" && (
         <div className={styles.inputSection}>
           <label className={styles.label} htmlFor="base64-input">
-            Paste a verification request (base64)
+            {t("verify.paste_label")}
           </label>
           <textarea
             id="base64-input"
@@ -370,7 +372,7 @@ function Verify() {
             rows={6}
             value={base64Input}
             onChange={(e) => setBase64Input(e.target.value)}
-            placeholder="Paste the verification request here..."
+            placeholder={t("verify.paste_placeholder")}
             spellCheck={false}
           />
           {error && <p className={styles.error}>{error}</p>}
@@ -379,7 +381,7 @@ function Verify() {
             onClick={() => handleDecode()}
             disabled={!base64Input.trim()}
           >
-            Decode & Verify
+            {t("verify.decode_button")}
           </button>
         </div>
       )}
@@ -399,16 +401,18 @@ function Verify() {
           {isTrustedRelyingParty ? (
             <div className={styles.infoMessage}>
               <Info size={20} className={styles.messageIcon} />
-              <span>Relying party <strong>{relyingPartyName}</strong> is part of the trusted list.</span>
+              <span>
+                {t("verify.trusted_party", { name: relyingPartyName })}
+              </span>
             </div>
           ) : (
             <div className={styles.warningMessage}>
               <AlertTriangle size={20} className={styles.messageIcon} />
-              <span>Warning: This relying party is not verified by the trust list.</span>
+              <span>{t("verify.untrusted_party")}</span>
             </div>
           )}
 
-          <p className={styles.label}>Select a credential to use:</p>
+          <p className={styles.label}>{t("verify.select_credential")}</p>
 
           <div className={styles.credentialList}>
             {matchingCredentials.map((cred) => (
@@ -419,14 +423,14 @@ function Verify() {
               >
                 <span className={styles.credType}>{cred.title}</span>
                 <span className={styles.issuer}>
-                  Issued by {cred.issuer.name}
+                  {t("verify.issued_by", { name: cred.issuer.name })}
                 </span>
               </button>
             ))}
           </div>
 
           <button className={styles.cancelButton} onClick={handleReset}>
-            Cancel
+            {t("verify.cancel")}
           </button>
         </div>
       )}
@@ -442,26 +446,28 @@ function Verify() {
           {isTrustedRelyingParty ? (
             <div className={styles.infoMessage}>
               <Info size={20} className={styles.messageIcon} />
-              <span>Relying party <strong>{relyingPartyName}</strong> is part of the trusted list.</span>
+              <span>
+                {t("verify.trusted_party", { name: relyingPartyName })}
+              </span>
             </div>
           ) : (
             <div className={styles.warningMessage}>
               <AlertTriangle size={20} className={styles.messageIcon} />
-              <span>Warning: This relying party is not verified by the trust list.</span>
+              <span>{t("verify.untrusted_party")}</span>
             </div>
           )}
 
           <div className={styles.credentialInfo}>
             <span className={styles.credType}>{selectedCredential.title}</span>
             <span className={styles.issuer}>
-              Issued by {selectedCredential.issuer.name}
+              {t("verify.issued_by", { name: selectedCredential.issuer.name })}
             </span>
           </div>
 
           <div className={styles.attributeList}>
             <div className={styles.claimHeader}>
-              <span>Claim</span>
-              <span>Value</span>
+              <span>{t("verify.claim")}</span>
+              <span>{t("verify.value")}</span>
             </div>
             {matchedClaims.map((claim) => (
               <div
@@ -469,8 +475,10 @@ function Verify() {
                 className={`${styles.claimRow} ${styles.requested}`}
               >
                 <span className={styles.attrName}>
-                  {claim.label}
-                  <span className={styles.requiredBadge}>requested</span>
+                  {t(`claims.${claim.name}`, { defaultValue: claim.label })}
+                  <span className={styles.requiredBadge}>
+                    {t("verify.requested_badge")}
+                  </span>
                 </span>
                 <span className={styles.attrValue}>{claim.value}</span>
               </div>
@@ -479,11 +487,10 @@ function Verify() {
 
           <div className={styles.actions}>
             <button className={styles.cancelButton} onClick={handleDecline}>
-              Decline
+              {t("verify.decline")}
             </button>
             <button className={styles.shareButton} onClick={handleShare}>
-              Share {matchedClaims.length} claim
-              {matchedClaims.length !== 1 ? "s" : ""}
+              {t("verify.share_claims", { count: matchedClaims.length })}
             </button>
           </div>
         </div>
@@ -492,7 +499,7 @@ function Verify() {
       {step === "submitting" && (
         <div className={styles.successSection}>
           <Loader2 size={48} className={styles.spinner} />
-          <h2 className={styles.successTitle}>Submitting proof...</h2>
+          <h2 className={styles.successTitle}>{t("verify.submitting")}</h2>
         </div>
       )}
 
@@ -501,34 +508,36 @@ function Verify() {
           <div className={styles.successIcon}>
             <ShieldCheck size={48} />
           </div>
-          <h2 className={styles.successTitle}>Proof Shared Successfully</h2>
+          <h2 className={styles.successTitle}>{t("verify.success_title")}</h2>
           <p className={styles.successText}>
-            The requested claims were shared with{" "}
-            {request
-              ? new URL(request.proof_endpoint).hostname
-              : "the relying party"}
-            .
+            {t("verify.success_text", {
+              hostname: request
+                ? new URL(request.proof_endpoint).hostname
+                : "the relying party",
+            })}
           </p>
           <ul className={styles.sharedList}>
             {matchedClaims.map((claim) => (
               <li key={claim.name} className={styles.sharedItem}>
-                <span className={styles.sharedLabel}>{claim.label}</span>
+                <span className={styles.sharedLabel}>
+                  {t(`claims.${claim.name}`, { defaultValue: claim.label })}
+                </span>
                 <span className={styles.sharedValue}>{claim.value}</span>
               </li>
             ))}
           </ul>
           <button className={styles.resetButton} onClick={handleReset}>
-            New Verification
+            {t("verify.new_verification")}
           </button>
         </div>
       )}
 
       {step === "error" && (
         <div className={styles.successSection}>
-          <h2 className={styles.successTitle}>Proof Failed</h2>
+          <h2 className={styles.successTitle}>{t("verify.error_title")}</h2>
           <p className={styles.error}>{error}</p>
           <button className={styles.resetButton} onClick={handleReset}>
-            Try Again
+            {t("common.try_again")}
           </button>
         </div>
       )}

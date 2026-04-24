@@ -66,7 +66,7 @@ test.describe.serial('Wallet E2E', () => {
 
     await walletPage.goto('https://wallet-frontend.wallet.test/verify');
     await walletPage.fill('#base64-input', requestBase64!.trim());
-    await walletPage.click('button:has-text("Decode & Verify")');
+    await walletPage.click('button:has-text("Verify")');
 
     await walletPage.waitForSelector('button[class*="shareButton"]', { timeout: 10000 });
     await walletPage.locator('button[class*="shareButton"]').click();

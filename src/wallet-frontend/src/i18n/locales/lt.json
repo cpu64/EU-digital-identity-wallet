@@ -1,0 +1,169 @@
+{
+  "common": {
+    "loading": "Kraunama...",
+    "error": "Klaida",
+    "error_message": "Klaida: {{message}}",
+    "close": "Uždaryti",
+    "try_again": "Bandyti dar kartą"
+  },
+  "login": {
+    "title": "Prisijungti prie Walletby",
+    "username": "Vartotojo vardas:",
+    "password": "Slaptažodis:",
+    "totp_checkbox": "Naudoju dviejų veiksnių autentifikaciją per TOTP",
+    "totp_label": "OTP kodas iš autentifikavimo programėlės",
+    "submit": "Prisijungti",
+    "no_account": "Neturite paskyros?",
+    "create_account": "Sukurti paskyrą",
+    "error_description": "Nepavyko prisijungti. Patikrinkite, ar sukūrėte paskyrą ir įvedėte teisingus duomenis."
+  },
+  "register": {
+    "title": "Registruotis prie Walletby",
+    "username": "Vartotojo vardas:",
+    "password": "Slaptažodis:",
+    "totp_checkbox": "Norėčiau naudoti dviejų veiksnių autentifikaciją per TOTP (laikiniai vienkartiniai slaptažodžiai)",
+    "totp_scan_label": "Nuskaitykite šį QR kodą savo autentifikavimo programėle, kad inicijuotumėte TOTP",
+    "totp_loading": "Palaukite, kol užsikraus QR kodas...",
+    "submit": "Registruotis",
+    "have_account": "Jau turite paskyrą?",
+    "log_in": "Prisijungti",
+    "error_description": "Nepavyko užsiregistruoti. {{errorStatus}}"
+  },
+  "credentials": {
+    "search_placeholder": "Ieškoti dokumentų..."
+  },
+  "credential_detail": {
+    "back": "Grįžti prie dokumentų",
+    "not_found": "Dokumentas nerastas.",
+    "delete_confirm": "Ar tikrai norite ištrinti šį dokumentą?",
+    "subject": "Subjektas",
+    "metadata": "Metaduomenys",
+    "issuer": "Išdavėjas",
+    "issuer_did": "Išdavėjo DID",
+    "issued": "Išduota",
+    "expires": "Galioja iki",
+    "format": "Formatas",
+    "type": "Tipas",
+    "delete": "Ištrinti"
+  },
+  "credential_card": {
+    "issuer": "Išdavėjas"
+  },
+  "pid_providers": {
+    "title": "PID tiekėjai",
+    "description": "Pasirinkite patikimą PID tiekėją, kad gautumėte savo asmens tapatybės dokumentą. Būsite nukreiptas(-a) pas tiekėją autentifikuotis.",
+    "loading": "Kraunami tiekėjai...",
+    "empty": "Nėra prieinamų PID tiekėjų.",
+    "load_error": "Nepavyko įkelti tiekėjų",
+    "start_error": "Nepavyko pradėti PID užklausos"
+  },
+  "pid_callback": {
+    "loading_title": "Gaunamas jūsų PID...",
+    "loading_text": "Gaunamas jūsų asmens tapatybės dokumentas iš tiekėjo.",
+    "error_title": "PID išdavimas nepavyko",
+    "try_again": "Bandyti dar kartą",
+    "view_credentials": "Peržiūrėti dokumentus",
+    "success_title": "PID sėkmingai pridėtas!",
+    "success_text": "Jūsų asmens tapatybės dokumentas buvo pridėtas prie jūsų piniginės.",
+    "missing_data": "Trūksta PID užklausos duomenų. Bandykite dar kartą.",
+    "no_pid": "Iš tiekėjo negautas joks PID",
+    "personal_id": "Asmens tapatybės dokumentas (PID)"
+  },
+  "transactions": {
+    "title": "Operacijos",
+    "from": "Nuo",
+    "to": "Iki",
+    "clear": "Išvalyti",
+    "empty": "Operacijų nerasta.",
+    "requester": "Prašytojas",
+    "credential": "Dokumentas",
+    "date": "Data",
+    "status": "Būsena"
+  },
+  "verify": {
+    "title": "Tvirtinti",
+    "paste_label": "Įklijuokite tvirtinimo užklausą (base64)",
+    "paste_placeholder": "Įklijuokite tvirtinimo užklausą čia...",
+    "decode_button": "Tvirtinti",
+    "select_credential": "Pasirinkite naudotiną dokumentą:",
+    "issued_by": "Išduota: {{name}}",
+    "cancel": "Atšaukti",
+    "decline": "Atmesti",
+    "share_claims_one": "Dalintis {{count}} teiginiu",
+    "share_claims_few": "Dalintis {{count}} teiginiais",
+    "share_claims_many": "Dalintis {{count}} teiginių",
+    "share_claims_other": "Dalintis {{count}} teiginių",
+    "claim": "Teiginys",
+    "value": "Reikšmė",
+    "requested_badge": "prašoma",
+    "submitting": "Teikiamas įrodymas...",
+    "success_title": "Įrodymas sėkmingai pasidalintas",
+    "success_text": "Prašomi teiginiai buvo pasidalinti su {{hostname}}.",
+    "new_verification": "Naujas tvirtinimas",
+    "error_title": "Įrodymas nepavyko",
+    "trusted_party": "Pasitikinti šalis {{name}} yra patikimų sąraše.",
+    "untrusted_party": "Įspėjimas: ši pasitikinti šalis nėra patikrinta patikimumo sąraše.",
+    "err_empty": "Įklijuokite tvirtinimo užklausą.",
+    "err_invalid_base64": "Neteisingas base64 kodavimas.",
+    "err_invalid_json": "Dekoduotas turinys nėra tinkamas JSON.",
+    "err_missing_fields": "Užklausoje turi būti requested_claims, nonce, proof_endpoint ir exp.",
+    "err_invalid_url": "Neteisingas proof_endpoint URL.",
+    "err_expired": "Ši tvirtinimo užklausa nebegalioja.",
+    "err_no_credentials": "Jūsų piniginėje nėra dokumentų su prašomais teiginiais."
+  },
+  "scan": {
+    "title": "Nuskaityti QR kodą",
+    "description": "Nuskaitykite tvirtinimo QR kodą naudodami kamerą. Naršyklė paprašys leidimo naudoti kamerą, kai pradėsite nuskaitymą.",
+    "start": "Pradėti nuskaitymą",
+    "stop": "Sustabdyti nuskaitymą",
+    "try_again": "Bandyti dar kartą",
+    "point_camera": "Nukreipkite kamerą į tvirtinimo QR kodą",
+    "camera_denied": "Prieiga prie kameros uždrausta. Leiskite prieigą naršyklės nustatymuose ir bandykite dar kartą."
+  },
+  "sign_document": {
+    "title": "Pasirašyti PDF dokumentą",
+    "choose_pdf": "Pasirinkti PDF",
+    "err_invalid_pdf": "Pasirinkite tinkamą PDF failą.",
+    "err_no_file": "PDF failas nepasirinktas.",
+    "err_signing_failed": "Pasirašymas nepavyko",
+    "signing": "Pasirašoma...",
+    "sign_download": "Pasirašyti ir atsisiųsti"
+  },
+  "navbar": {
+    "app_name": "Walletby",
+    "toggle_theme": "Perjungti temą",
+    "profile": "Profilis",
+    "session_expiring_title": "Sesija netrukus baigsis",
+    "session_expiring_body": "Jūsų sesija netrukus baigsis. Pasirinkite tęsti arba būsite automatiškai atjungtas(-a).",
+    "continue_session": "Tęsti sesiją",
+    "log_out": "Atsijungti",
+    "language": "Kalba"
+  },
+  "sidenav": {
+    "credentials": "Dokumentai",
+    "pid_providers": "PID tiekėjai",
+    "verify": "Tvirtinti",
+    "transactions": "Operacijos",
+    "scan": "Nuskaityti",
+    "document_signing": "Pasirašymas",
+    "settings": "Nustatymai",
+    "logout": "Atsijungti"
+  },
+  "claims": {
+    "given_name": "Vardas",
+    "family_name": "Pavardė",
+    "birth_date": "Gimimo data",
+    "birthdate": "Gimimo data",
+    "birth_place": "Gimimo vieta",
+    "nationality": "Pilietybė",
+    "resident_address": "Adresas",
+    "resident_country": "Šalis",
+    "resident_state": "Valstija",
+    "resident_city": "Miestas",
+    "resident_postal_code": "Pašto kodas",
+    "resident_street": "Gatvė",
+    "resident_house_number": "Namo numeris",
+    "sex": "Lytis",
+    "email_address": "El. pašto adresas"
+  }
+}

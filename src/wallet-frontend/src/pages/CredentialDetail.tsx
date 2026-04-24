@@ -7,6 +7,7 @@ import {
 import { ArrowLeft, Trash2 } from "lucide-react";
 import styles from "../components/CredentialsPage/CredentialDetail.module.css";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function CredentialDetail() {
   const { id } = useParams<{ id: string }>();
@@ -15,14 +16,14 @@ function CredentialDetail() {
     undefined,
   );
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [error, setError] = useState<any>(null);
 
   const handleDelete = async () => {
     if (!credential) return;
-    if (!window.confirm("Are you sure you want to delete this credential?"))
-      return;
+    if (!window.confirm(t("credential_detail.delete_confirm"))) return;
     try {
       await deleteCredential(credential.id);
       navigate("/credentials");
@@ -51,8 +52,9 @@ function CredentialDetail() {
     fetchData();
   }, [id]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (loading) return <p>{t("common.loading")}</p>;
+  if (error)
+    return <p>{t("common.error_message", { message: error.message })}</p>;
 
   if (!credential) {
     return (
@@ -61,9 +63,9 @@ function CredentialDetail() {
           className={styles.backButton}
           onClick={() => navigate("/credentials")}
         >
-          <ArrowLeft size={18} /> Back to credentials
+          <ArrowLeft size={18} /> {t("credential_detail.back")}
         </button>
-        <p>Credential not found.</p>
+        <p>{t("credential_detail.not_found")}</p>
       </div>
     );
   }
@@ -88,7 +90,7 @@ function CredentialDetail() {
         className={styles.backButton}
         onClick={() => navigate("/credentials")}
       >
-        <ArrowLeft size={18} /> Back to credentials
+        <ArrowLeft size={18} /> {t("credential_detail.back")}
       </button>
 
       <div className={styles.header}>
@@ -98,14 +100,16 @@ function CredentialDetail() {
             {credential.status}
           </span>
           <button className={styles.deleteButton} onClick={handleDelete}>
-            <Trash2 size={18} /> Delete
+            <Trash2 size={18} /> {t("credential_detail.delete")}
           </button>
         </div>
       </div>
 
       {/* Subject details */}
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Subject</h2>
+        <h2 className={styles.sectionTitle}>
+          {t("credential_detail.subject")}
+        </h2>
         {Object.entries(credential.subject).map(([label, value]) => (
           <div className={styles.field} key={label}>
             <span className={styles.fieldLabel}>{label}</span>
@@ -116,34 +120,48 @@ function CredentialDetail() {
 
       {/* Metadata */}
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Metadata</h2>
+        <h2 className={styles.sectionTitle}>
+          {t("credential_detail.metadata")}
+        </h2>
         <div className={styles.metaGrid}>
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>Issuer</span>
+            <span className={styles.metaLabel}>
+              {t("credential_detail.issuer")}
+            </span>
             <span className={styles.metaValue}>{credential.issuer.name}</span>
           </div>
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>Issuer DID</span>
+            <span className={styles.metaLabel}>
+              {t("credential_detail.issuer_did")}
+            </span>
             <span className={styles.metaValue}>{credential.issuer.did}</span>
           </div>
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>Issued</span>
+            <span className={styles.metaLabel}>
+              {t("credential_detail.issued")}
+            </span>
             <span className={styles.metaValue}>
               {formatDate(credential.issuanceDate)}
             </span>
           </div>
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>Expires</span>
+            <span className={styles.metaLabel}>
+              {t("credential_detail.expires")}
+            </span>
             <span className={styles.metaValue}>
               {formatDate(credential.expirationDate)}
             </span>
           </div>
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>Format</span>
+            <span className={styles.metaLabel}>
+              {t("credential_detail.format")}
+            </span>
             <span className={styles.metaValue}>{credential.format}</span>
           </div>
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>Type</span>
+            <span className={styles.metaLabel}>
+              {t("credential_detail.type")}
+            </span>
             <span className={styles.metaValue}>{credential.type}</span>
           </div>
         </div>

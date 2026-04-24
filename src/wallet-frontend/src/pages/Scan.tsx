@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Html5Qrcode } from "html5-qrcode";
 import { QrCode, Camera } from "lucide-react";
 import styles from "../components/ScanPage/Scan.module.css";
+import { useTranslation } from "react-i18next";
 
 type ScanState = "prompt" | "scanning" | "denied" | "error";
 
@@ -12,6 +13,7 @@ function Scan() {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const shouldStartRef = useRef(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const startScanner = () => {
     setError("");
@@ -45,9 +47,7 @@ function Scan() {
           message.includes("NotAllowedError")
         ) {
           setState("denied");
-          setError(
-            "Camera access was denied. Please allow camera access in your browser settings and try again.",
-          );
+          setError(t("scan.camera_denied"));
         } else {
           setState("error");
           setError(message || "Failed to start camera.");
@@ -80,32 +80,27 @@ function Scan() {
   return (
     <div className={styles.container}>
       <h1 className={styles.pageTitle}>
-        <QrCode size={28} /> Scan QR Code
+        <QrCode size={28} /> {t("scan.title")}
       </h1>
 
       {state === "prompt" && (
         <div className={styles.permissionSection}>
           <Camera size={48} className={styles.permissionIcon} />
-          <p className={styles.permissionText}>
-            Scan a verification QR code using your camera. Your browser will ask
-            for camera permission when you start scanning.
-          </p>
+          <p className={styles.permissionText}>{t("scan.description")}</p>
           <button className={styles.startButton} onClick={startScanner}>
-            Start Scanning
+            {t("scan.start")}
           </button>
         </div>
       )}
 
       {state === "scanning" && (
         <div className={styles.scannerSection}>
-          <p className={styles.description}>
-            Point your camera at a verification QR code
-          </p>
+          <p className={styles.description}>{t("scan.point_camera")}</p>
           <div className={styles.scannerWrapper}>
             <div id="qr-reader" />
           </div>
           <button className={styles.stopButton} onClick={stopScanner}>
-            Stop Scanning
+            {t("scan.stop")}
           </button>
         </div>
       )}
@@ -115,7 +110,7 @@ function Scan() {
           <Camera size={48} className={styles.permissionIcon} />
           <p className={styles.error}>{error}</p>
           <button className={styles.startButton} onClick={startScanner}>
-            Try Again
+            {t("scan.try_again")}
           </button>
         </div>
       )}

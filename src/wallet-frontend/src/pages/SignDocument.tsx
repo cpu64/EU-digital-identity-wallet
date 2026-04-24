@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Download, FileUp, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useTranslation } from "react-i18next";
 
 function SignDocument() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -18,13 +20,13 @@ function SignDocument() {
       setError("");
     } else {
       setFile(null);
-      setError("Please select a valid PDF file.");
+      setError(t("sign_document.err_invalid_pdf"));
     }
   };
 
   const handleSign = async () => {
     if (!file) {
-      setError("No PDF file selected.");
+      setError(t("sign_document.err_no_file"));
       return;
     }
 
@@ -48,7 +50,7 @@ function SignDocument() {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || "Signing failed");
+        throw new Error(errorText || t("sign_document.err_signing_failed"));
       }
 
       const blob = await response.blob();
@@ -77,7 +79,7 @@ function SignDocument() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileUp className="h-5 w-5" />
-          Sign PDF Document
+          {t("sign_document.title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -95,7 +97,7 @@ function SignDocument() {
             onClick={triggerFileInput}
             disabled={loading}
           >
-            Choose PDF
+            {t("sign_document.choose_pdf")}
           </Button>
           {file && (
             <span className="text-sm text-muted-foreground truncate flex-1">
@@ -118,12 +120,12 @@ function SignDocument() {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Signing...
+              {t("sign_document.signing")}
             </>
           ) : (
             <>
               <Download className="mr-2 h-4 w-4" />
-              Sign & Download
+              {t("sign_document.sign_download")}
             </>
           )}
         </Button>

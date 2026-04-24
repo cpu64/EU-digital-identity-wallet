@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "../components/TransactionsPage/Transactions.module.css";
 import { getData, type WalletData } from "@/data/wallet_data";
+import { useTranslation } from "react-i18next";
 
 function Transactions() {
   const formatDate = (iso: string) =>
@@ -16,6 +17,7 @@ function Transactions() {
   const [loading, setLoading] = useState(true);
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const { t } = useTranslation();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [error, setError] = useState<any>(null);
@@ -36,8 +38,9 @@ function Transactions() {
     fetchData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (loading) return <p>{t("common.loading")}</p>;
+  if (error)
+    return <p>{t("common.error_message", { message: error.message })}</p>;
 
   const filteredTransactions = walletData?.transactions.filter((txn) => {
     const txnDate = new Date(txn.timestamp);
@@ -52,11 +55,11 @@ function Transactions() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Transactions</h1>
+      <h1 className={styles.title}>{t("transactions.title")}</h1>
 
       <div className={styles.filters}>
         <label className={styles.filterLabel}>
-          From
+          {t("transactions.from")}
           <input
             type="date"
             value={dateFrom}
@@ -65,7 +68,7 @@ function Transactions() {
           />
         </label>
         <label className={styles.filterLabel}>
-          To
+          {t("transactions.to")}
           <input
             type="date"
             value={dateTo}
@@ -81,20 +84,26 @@ function Transactions() {
               setDateTo("");
             }}
           >
-            Clear
+            {t("transactions.clear")}
           </button>
         )}
       </div>
 
       {filteredTransactions?.length === 0 ? (
-        <p className={styles.empty}>No transactions found.</p>
+        <p className={styles.empty}>{t("transactions.empty")}</p>
       ) : (
         <div className={styles.list}>
           <div className={styles.headerRow}>
-            <span className={styles.headerCell}>Requester</span>
-            <span className={styles.headerCell}>Credential</span>
-            <span className={styles.headerCell}>Date</span>
-            <span className={styles.headerCell}>Status</span>
+            <span className={styles.headerCell}>
+              {t("transactions.requester")}
+            </span>
+            <span className={styles.headerCell}>
+              {t("transactions.credential")}
+            </span>
+            <span className={styles.headerCell}>{t("transactions.date")}</span>
+            <span className={styles.headerCell}>
+              {t("transactions.status")}
+            </span>
           </div>
 
           {filteredTransactions?.map((txn) => (

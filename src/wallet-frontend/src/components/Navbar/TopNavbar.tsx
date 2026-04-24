@@ -12,6 +12,8 @@ import {
   DialogFooter,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { useTranslation } from "react-i18next";
+import i18n from "../../i18n";
 
 type UseSessionTimeoutOptions = {
   idleMs: number;
@@ -103,6 +105,8 @@ function TopNavbar({ setToken }: { setToken: (t: string | null) => void }) {
   const [showProfile, setShowProfile] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
+  const [currentLang, setCurrentLang] = useState(i18n.language);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -127,24 +131,30 @@ function TopNavbar({ setToken }: { setToken: (t: string | null) => void }) {
     },
   });
 
+  const toggleLanguage = () => {
+    const next = currentLang === "en" ? "lt" : "en";
+    i18n.changeLanguage(next);
+    localStorage.setItem("language", next);
+    setCurrentLang(next);
+  };
+
   return (
     <>
       <Dialog open={showWarning}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Session expiring soon</DialogTitle>
+            <DialogTitle>{t("navbar.session_expiring_title")}</DialogTitle>
             <DialogDescription>
-              Your session will expire shortly. Choose to continue or you will
-              be logged out automatically.
+              {t("navbar.session_expiring_body")}
             </DialogDescription>
           </DialogHeader>
 
           <DialogFooter className="sm:justify-center">
             <Button type="button" onClick={continueSession}>
-              Continue session
+              {t("navbar.continue_session")}
             </Button>
             <Button type="button" variant="destructive" onClick={logoutNow}>
-              Log out
+              {t("navbar.log_out")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -157,20 +167,28 @@ function TopNavbar({ setToken }: { setToken: (t: string | null) => void }) {
             alt="Wallet Logo"
             className={styles.logo}
           />
-          Walletby
+          {t("navbar.app_name")}
         </div>
         <div className={styles.navActions}>
           <button
             className={styles.themeToggle}
-            aria-label="Toggle theme"
+            aria-label={t("navbar.toggle_theme")}
             onClick={toggleTheme}
           >
             {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
           </button>
+          <button
+            className={styles.themeToggle}
+            aria-label={t("navbar.language")}
+            onClick={toggleLanguage}
+            title={t("navbar.language")}
+          >
+            {currentLang === "en" ? "LT" : "EN"}
+          </button>
           <div ref={profileRef} className={styles.profileWrapper}>
             <button
               className={styles.profileButton}
-              aria-label="Profile"
+              aria-label={t("navbar.profile")}
               onClick={() => setShowProfile((v) => !v)}
             >
               <User size={22} />

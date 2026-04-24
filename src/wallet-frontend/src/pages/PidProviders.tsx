@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Building2, ChevronRight } from "lucide-react";
 import styles from "../components/PidProvidersPage/PidProviders.module.css";
+import { useTranslation } from "react-i18next";
 
 type PidProvider = {
   domain: string;
@@ -35,6 +36,7 @@ function PidProviders() {
   const [providers, setProviders] = useState<PidProvider[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function fetchProviders() {
@@ -49,7 +51,7 @@ function PidProviders() {
         setProviders(data);
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Failed to load providers",
+          err instanceof Error ? err.message : t("pid_providers.load_error"),
         );
       } finally {
         setLoading(false);
@@ -94,7 +96,7 @@ function PidProviders() {
       window.location.href = url;
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to start PID request",
+        err instanceof Error ? err.message : t("pid_providers.start_error"),
       );
     }
   }
@@ -102,18 +104,17 @@ function PidProviders() {
   return (
     <div className={styles.container}>
       <h1 className={styles.pageTitle}>
-        <Building2 size={28} /> PID Providers
+        <Building2 size={28} /> {t("pid_providers.title")}
       </h1>
-      <p className={styles.description}>
-        Select a trusted PID provider to obtain your Personal Identity Document.
-        You will be redirected to the provider to authenticate.
-      </p>
+      <p className={styles.description}>{t("pid_providers.description")}</p>
 
-      {loading && <p className={styles.loading}>Loading providers...</p>}
+      {loading && (
+        <p className={styles.loading}>{t("pid_providers.loading")}</p>
+      )}
       {error && <p className={styles.error}>{error}</p>}
 
       {!loading && !error && providers.length === 0 && (
-        <p className={styles.empty}>No PID providers available.</p>
+        <p className={styles.empty}>{t("pid_providers.empty")}</p>
       )}
 
       <div className={styles.providerList}>
