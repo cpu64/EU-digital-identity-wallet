@@ -28,7 +28,7 @@ export default function App() {
                 toast.success("Age successfully verified with EUDI Wallet")
                 setCheckoutOpen(true)
             } catch (err) {
-                window.alert(err.message)
+                toast.error(err.message)
             }
         } else {
             setCheckoutOpen(true)
