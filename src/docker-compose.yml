@@ -121,5 +121,15 @@ services:
       - ./certs/wildcard.test.crt:/etc/nginx/certs/wildcard.test.crt:ro
       - ./certs/wildcard.test.key:/etc/nginx/certs/wildcard.test.key:ro
 
+  dnsmasq:
+    image: cpu64/dnsmasq
+    container_name: dnsmasq
+    network_mode: "host"
+    environment:
+      NO_HOSTS: "true"
+      DEV_DOMAIN: "wallet.test"
+      DNS1: "1.1.1.1"
+    restart: always
+
 networks:
   wallet-net:
