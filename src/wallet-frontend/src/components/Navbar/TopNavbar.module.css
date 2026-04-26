@@ -54,6 +54,15 @@
   }
 }
 
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+
 .logo {
   height: 40px;
   width: auto;

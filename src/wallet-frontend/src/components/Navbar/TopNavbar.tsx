@@ -1,7 +1,7 @@
 import { User, Sun, Moon, Menu } from "lucide-react";
 import styles from "./TopNavbar.module.css";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import {
   Dialog,
@@ -180,12 +180,14 @@ function TopNavbar({
               <Menu size={22} />
             </button>
           )}
-          <img
-            src="/images/wallet-logo.png"
-            alt="Wallet Logo"
-            className={styles.logo}
-          />
-          <span className={styles.appName}>{t("navbar.app_name")}</span>
+          <NavLink to="/credentials" className={styles.logoLink}>
+            <img
+              src="/images/wallet-logo.png"
+              alt="Wallet Logo"
+              className={styles.logo}
+            />
+            <span className={styles.appName}>{t("navbar.app_name")}</span>
+          </NavLink>
         </div>
         <div className={styles.navActions}>
           <button

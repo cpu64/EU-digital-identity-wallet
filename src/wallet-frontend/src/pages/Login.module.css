@@ -10,18 +10,14 @@
 }
 
 .login_box {
+  position: fixed;
+  inset: 0;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  min-height: calc(100vh - 56px);
-  padding: 2rem 1rem;
-}
-
-@media (min-width: 768px) {
-  .login_box {
-    align-items: center;
-    padding: 2rem;
-  }
+  align-items: center;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: var(--app-bg);
 }
 
 .qrCodeWrapper {
