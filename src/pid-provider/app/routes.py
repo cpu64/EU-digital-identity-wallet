@@ -4,10 +4,9 @@ from quart_cors import cors
 import hashlib
 import urllib.parse
 import pyotp
-import secrets
 import json
 
-from utils import generate_pid
+from utils import create_url, generate_pid
 
 MAIN_DOMAIN = 'pid-provider.wallet.test'
 PUBLIC_DOMAIN = 'public.pid-provider.wallet.test'
@@ -121,24 +120,25 @@ def register_routes(app, db):
         if not pan or not session.get('totp_authenticated'):
             return redirect(url_for('main.login'))
 
-        # One time code for auth
-        code = secrets.token_urlsafe()[:32]
-        async with db.connection() as conn:
-            # Remove previous code and create a new one
-            await conn.execute("DELETE FROM issuance_codes WHERE pan = :pan", {"pan": pan})
-            await conn.execute(
-                "INSERT INTO issuance_codes (code, pan) VALUES (:code, :pan)",
-                {"code": code, "pan": pan}
-            )
-
-        # Credentials offer for QR code
-        offer_uri = f"openid-credential-offer://?credential_offer_uri=https://{PUBLIC_DOMAIN}/api/credential-offer/{code}"
+        # URI for QR code
+        offer_uri = await create_url(db, pan)
 
         # Fetches the citizen from the database by personal ID
         async with db.connection() as conn:
             record = await conn.fetch_first("SELECT * FROM citizens WHERE personal_administrative_number = :pan", {"pan": pan})
 
-        return await render_template('dashboard.html', citizen=dict(record), issuance_code=code, offer_uri=offer_uri)
+        return await render_template('dashboard.html', citizen=dict(record), offer_uri=offer_uri)
+
+
+    @main_route('/api/refresh-qr', methods=['GET'])
+    async def refresh_qr():
+        pan = session.get('pan')
+        if not pan or not session.get('totp_authenticated'):
+            return jsonify({"error": "Unauthorized"}), 401
+
+        offer_uri = await create_url(db, pan)
+
+        return jsonify({"offer_uri": offer_uri})
 
     @main_route('/api/request-pid', methods=['GET'])
     async def create_pid():

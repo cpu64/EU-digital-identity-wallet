@@ -5,7 +5,7 @@ from quart import Quart
 from quart_db import QuartDB
 from jwcrypto import jwk
 
-from routes import register_routes
+from routes import register_routes, PUBLIC_DOMAIN
 from utils import cleanup_expired_entries
 
 PGUSER = os.getenv('PGUSER')
@@ -16,7 +16,6 @@ PGDATABASE = os.getenv('PGDATABASE')
 DB_URL = f"postgresql://{PGUSER}:{PGPASSWORD}@{PGHOST}:{PGPORT}/{PGDATABASE}"
 
 MAIN_DOMAIN = 'pid-provider.wallet.test'
-PUBLIC_DOMAIN = 'public.pid-provider.wallet.test'
 
 app = Quart(__name__, host_matching=True, static_host=MAIN_DOMAIN)
 app.secret_key = os.environ.get("SECRET_KEY")

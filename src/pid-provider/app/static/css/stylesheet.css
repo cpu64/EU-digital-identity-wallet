@@ -239,6 +239,7 @@ input[name="code"] {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 8px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .timer-text {
@@ -265,6 +266,7 @@ input[name="code"] {
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, text-color 0.3s ease;
 }
 
 .btn-group {
@@ -281,4 +283,5 @@ input[name="code"] {
     margin: 0 auto 15px auto;
     border-radius: 8px;
     border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }

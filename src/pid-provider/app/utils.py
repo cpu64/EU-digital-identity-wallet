@@ -1,3 +1,4 @@
+import secrets
 import time
 import asyncio
 import hashlib
@@ -6,6 +7,7 @@ from jwcrypto import jwk
 from sd_jwt.issuer import SDJWTIssuer
 from sd_jwt.common import SDObj
 
+import routes
 
 # Background task to clean up expired PIDs that have not been retreived
 # and unsused codes from offers
@@ -88,3 +90,17 @@ async def generate_pid(db, app, pan: str, pub_key, passkey: str):
             "INSERT INTO issued_pids (passkey, sd_jwt) VALUES (:passkey, :sd_jwt)",
             {"passkey": hashed_passkey, "sd_jwt": token}
         )
+
+async def create_url(db, pan) -> str:
+
+    code = secrets.token_urlsafe()[:32]
+
+    async with db.connection() as conn:
+        await conn.execute("DELETE FROM issuance_codes WHERE pan = :pan", {"pan": pan})
+        await conn.execute(
+            "INSERT INTO issuance_codes (code, pan) VALUES (:code, :pan)",
+            {"code": code, "pan": pan}
+        )
+
+    offer_uri = f"openid-credential-offer://?credential_offer_uri=https://{routes.PUBLIC_DOMAIN}/api/credential-offer/{code}"
+    return offer_uri

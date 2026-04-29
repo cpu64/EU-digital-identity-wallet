@@ -51,56 +51,16 @@
                     QR kodas PID išdavimui (galioja: <span id="timer">00:00</span>):
                 </p>
                 <div class="qr-container" id="qrcode"></div>
+                <script src="{{ url_for('static', filename='js/qr.js') }}"></script>
                 <div class="code-row">
-                    <code id="offer_uri" class="offer_uri">{{ offer_uri }}</code>
+                    <code id="offer_uri" class="offer_uri"></code>
                     <div class="btn-group">
                         <button onclick="copyCode()">Kopijuoti</button>
-                        <button onclick="window.location.reload()">Naujas</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        let timeLeft = 120;
-        const timer = document.getElementById('timer');
-
-        function updateTimerDisplay() {
-            if (timeLeft <= 0) {
-                if (typeof countdown !== 'undefined') clearInterval(countdown);
-                timer.textContent = "Baigėsi galiojimas, sugeneruokite naują";
-                timer.style.color = "red";
-                document.getElementById('offer_uri').style.opacity = "0.5";
-                document.getElementById('qrcode').style.opacity = "0.3";
-            } else {
-                let minutes = Math.floor(timeLeft / 60);
-                let seconds = timeLeft % 60;
-                timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-        }
-
-        updateTimerDisplay();
-
-        new QRCode(document.getElementById("qrcode"), {
-            text: "{{ offer_uri }}",
-            width: 200,
-            height: 200,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-
-        const countdown = setInterval(() => {
-            timeLeft--;
-            updateTimerDisplay();
-        }, 1000);
-
-        function copyCode() {
-            const code = document.getElementById('offer_uri').textContent;
-            navigator.clipboard.writeText(code);
-        }
-    </script>
 </body>
 
 </html>
