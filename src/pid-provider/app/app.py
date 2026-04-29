@@ -5,7 +5,7 @@ from quart import Quart
 from quart_db import QuartDB
 from jwcrypto import jwk
 
-from routes import register_routes, PUBLIC_DOMAIN
+from routes import register_routes
 from utils import cleanup_expired_entries
 
 PGUSER = os.getenv('PGUSER')

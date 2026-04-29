@@ -92,7 +92,6 @@ async def generate_pid(db, app, pan: str, pub_key, passkey: str):
         )
 
 async def create_url(db, pan) -> str:
-
     code = secrets.token_urlsafe()[:32]
 
     async with db.connection() as conn:

@@ -129,7 +129,6 @@ def register_routes(app, db):
 
         return await render_template('dashboard.html', citizen=dict(record), offer_uri=offer_uri)
 
-
     @main_route('/api/refresh-qr', methods=['GET'])
     async def refresh_qr():
         pan = session.get('pan')
