@@ -142,7 +142,7 @@
 }
 
 .attributeHeader {
-  display: grid;
+  display: none;
   grid-template-columns: 1fr 1fr 60px;
   padding: 0.6rem 1.25rem;
   font-size: 0.75rem;
@@ -153,14 +153,27 @@
   border-bottom: 1px solid var(--tertiary);
 }
 
+@media (min-width: 640px) {
+  .attributeHeader {
+    display: grid;
+  }
+}
+
 .attributeRow {
   display: grid;
-  grid-template-columns: 1fr 1fr 60px;
+  grid-template-columns: 1fr 40px;
+  gap: 0.4rem 1rem;
   padding: 0.7rem 1.25rem;
   align-items: center;
   cursor: pointer;
   transition: background-color 0.15s ease;
   border-bottom: 1px solid var(--tertiary);
+}
+
+@media (min-width: 640px) {
+  .attributeRow {
+    grid-template-columns: 1fr 1fr 60px;
+  }
 }
 
 .attributeRow:last-child {
@@ -181,7 +194,9 @@
   color: var(--light-1);
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
+  word-break: break-word;
 }
 
 .requiredBadge {
@@ -198,6 +213,8 @@
 .attrValue {
   font-size: 0.9rem;
   color: var(--light-2);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .checkbox {
@@ -210,6 +227,7 @@
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: flex-end;
   margin-top: 0.5rem;
@@ -350,7 +368,7 @@
 }
 
 .claimHeader {
-  display: grid;
+  display: none;
   grid-template-columns: 1fr 1fr 60px;
   padding: 0.6rem 1.25rem;
   font-size: 0.75rem;
@@ -361,13 +379,26 @@
   border-bottom: 1px solid var(--tertiary);
 }
 
+@media (min-width: 640px) {
+  .claimHeader {
+    display: grid;
+  }
+}
+
 .claimRow {
   display: grid;
-  grid-template-columns: 1fr 1fr 60px;
+  grid-template-columns: 1fr 40px;
+  gap: 0.4rem 1rem;
   padding: 0.7rem 1.25rem;
   align-items: center;
   border-bottom: 1px solid var(--tertiary);
   cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .claimRow {
+    grid-template-columns: 1fr 1fr 60px;
+  }
 }
 
 .claimRow:last-child {

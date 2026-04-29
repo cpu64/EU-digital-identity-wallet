@@ -146,8 +146,17 @@ function RegisterUser() {
                 <FieldLabel>{t("register.totp_scan_label")}</FieldLabel>
                 {qrCodeLink == null && <p>{t("register.totp_loading")}</p>}
                 {qrCodeLink != null && (
-                  <div style={{ background: "white", padding: "16px" }}>
-                    <QRCode value={qrCodeLink} size={300} />
+                  <div className={styles.qrCodeWrapper}>
+                    <QRCode
+                      value={qrCodeLink}
+                      size={300}
+                      style={{
+                        height: "auto",
+                        maxWidth: "100%",
+                        width: "100%",
+                      }}
+                      viewBox="0 0 300 300"
+                    />
                   </div>
                 )}
               </Field>

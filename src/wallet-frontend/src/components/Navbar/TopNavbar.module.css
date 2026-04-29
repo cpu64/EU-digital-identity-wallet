@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 12px;
   background-color: var(--app-surface);
   border-bottom: 1px solid var(--tertiary);
   z-index: 100;
@@ -16,21 +16,84 @@
     border-color 0.3s ease;
 }
 
+@media (min-width: 768px) {
+  .topNavbar {
+    padding: 0 20px;
+  }
+}
+
 .logoContainer {
   display: flex;
   align-items: center;
+  gap: 8px;
   color: var(--light-1);
+  min-width: 0;
+  flex: 1;
+}
+
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--light-1);
+  cursor: pointer;
+}
+
+.menuButton:hover {
+  background-color: var(--tertiary);
+}
+
+@media (min-width: 768px) {
+  .menuButton {
+    display: none;
+  }
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
 }
 
 .logo {
-  height: 60px;
+  height: 40px;
   width: auto;
+  flex-shrink: 0;
+}
+
+.appName {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+@media (max-width: 479px) {
+  .appName {
+    display: none;
+  }
 }
 
 .navActions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 480px) {
+  .navActions {
+    gap: 12px;
+  }
 }
 
 .themeToggle {
@@ -86,6 +149,9 @@
   color: var(--light-1);
   font-size: 14px;
   white-space: nowrap;
+  max-width: 80vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 200;
 }

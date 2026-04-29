@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Html5Qrcode } from "html5-qrcode";
+import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
 import { QrCode, Camera } from "lucide-react";
 import styles from "../components/ScanPage/Scan.module.css";
 import { useTranslation } from "react-i18next";
@@ -21,6 +21,24 @@ function Scan() {
     setState("scanning");
   };
 
+  const safeStopScanner = async () => {
+    const scanner = scannerRef.current;
+    scannerRef.current = null;
+    if (!scanner) return;
+    try {
+      if (scanner.getState() === Html5QrcodeScannerState.SCANNING) {
+        await scanner.stop();
+      }
+    } catch {
+      /* ignore */
+    }
+    try {
+      scanner.clear();
+    } catch {
+      /* ignore */
+    }
+  };
+
   useEffect(() => {
     if (state !== "scanning" || !shouldStartRef.current) return;
     shouldStartRef.current = false;
@@ -30,17 +48,21 @@ function Scan() {
         const scanner = new Html5Qrcode("qr-reader");
         scannerRef.current = scanner;
 
+        const wrapper = document.getElementById("qr-reader");
+        const wrapperWidth = wrapper?.clientWidth ?? 250;
+        const qrSize = Math.max(160, Math.min(250, wrapperWidth - 32));
+
         await scanner.start(
           { facingMode: "environment" },
-          { fps: 10, qrbox: { width: 250, height: 250 } },
+          { fps: 10, qrbox: { width: qrSize, height: qrSize } },
           (decodedText) => {
-            scanner.stop().catch(() => {});
-            scannerRef.current = null;
+            void safeStopScanner();
             navigate("/verify", { state: { scannedData: decodedText } });
           },
           () => {},
         );
       } catch (err) {
+        await safeStopScanner();
         const message = err instanceof Error ? err.message : String(err);
         if (
           message.includes("Permission") ||
@@ -59,21 +81,13 @@ function Scan() {
   }, [state, navigate]);
 
   const stopScanner = async () => {
-    if (scannerRef.current) {
-      try {
-        await scannerRef.current.stop();
-      } catch {}
-      scannerRef.current = null;
-    }
+    await safeStopScanner();
     setState("prompt");
   };
 
   useEffect(() => {
     return () => {
-      if (scannerRef.current) {
-        scannerRef.current.stop().catch(() => {});
-        scannerRef.current = null;
-      }
+      void safeStopScanner();
     };
   }, []);
 

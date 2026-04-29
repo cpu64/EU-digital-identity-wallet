@@ -1,6 +1,7 @@
 .logo {
   height: 80px;
-  width: fit-content;
+  width: auto;
+  max-width: 100%;
 }
 
 .title {
@@ -9,8 +10,27 @@
 }
 
 .login_box {
+  position: fixed;
+  inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10em;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: var(--app-bg);
+}
+
+.qrCodeWrapper {
+  background: white;
+  padding: 16px;
+  width: 100%;
+  max-width: 332px;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
+.qrCodeWrapper svg {
+  width: 100%;
+  height: auto;
+  display: block;
 }

@@ -30,17 +30,29 @@ function removeToken() {
   sessionStorage.removeItem("token");
 }
 
-function SideNavbar({ setToken }: { setToken: (t: string | null) => void }) {
+function SideNavbar({
+  setToken,
+  open = false,
+  onClose,
+}: {
+  setToken: (t: string | null) => void;
+  open?: boolean;
+  onClose?: () => void;
+}) {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   return (
-    <nav className={styles.sideNavbar}>
+    <nav
+      className={`${styles.sideNavbar} ${open ? styles.open : ""}`}
+      aria-hidden={!open ? undefined : "false"}
+    >
       <ul className={styles.navList}>
         {navItems.map((item) => (
           <li key={item.to} className={styles.navItem}>
             <NavLink
               to={item.to}
+              onClick={onClose}
               className={({ isActive }) =>
                 `${styles.navLink} ${isActive ? styles.active : ""}`
               }
@@ -58,6 +70,7 @@ function SideNavbar({ setToken }: { setToken: (t: string | null) => void }) {
           onClick={() => {
             removeToken();
             setToken(null);
+            onClose?.();
             navigate("/");
           }}
         >

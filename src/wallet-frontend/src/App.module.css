@@ -5,11 +5,40 @@
 }
 
 .mainContent {
-  padding: 24px;
-  min-height: calc(100vh - 56px);
+  padding: clamp(12px, 4vw, 24px);
+  padding-top: calc(56px + clamp(12px, 4vw, 24px));
+  min-height: 100vh;
   background-color: var(--app-bg);
   color: var(--light-1);
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .mainContent {
+    padding-left: calc(220px + 24px);
+    padding-right: 24px;
+  }
+}
+
+.backdrop {
+  position: fixed;
+  inset: 56px 0 0 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 90;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.backdropOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .backdrop {
+    display: none;
+  }
 }

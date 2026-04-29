@@ -29,6 +29,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
   background-color: var(--app-surface);
   border: 1px solid var(--tertiary);
   border-radius: 8px;
@@ -48,17 +49,21 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .providerName {
   font-size: 1rem;
   font-weight: 600;
   color: var(--light-2);
+  word-break: break-word;
 }
 
 .providerDomain {
   font-size: 0.8rem;
   color: var(--gray-1);
+  word-break: break-all;
 }
 
 .providerArrow {

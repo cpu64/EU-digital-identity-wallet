@@ -36,6 +36,15 @@
   border: 1px solid var(--tertiary);
 }
 
+.scannerWrapper :global(#qr-reader),
+.scannerWrapper :global(#qr-reader video),
+.scannerWrapper :global(#qr-reader img) {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
 .error {
   color: var(--warning);
   font-size: 0.85rem;

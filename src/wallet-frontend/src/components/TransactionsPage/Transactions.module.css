@@ -13,6 +13,7 @@
 .filters {
   display: flex;
   align-items: flex-end;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
@@ -26,6 +27,8 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--gray-1);
+  flex: 1 1 140px;
+  min-width: 0;
 }
 
 .dateInput {
@@ -69,13 +72,21 @@
 
 .row {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr 0.6fr;
-  align-items: center;
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 0.5rem;
   background-color: var(--app-surface);
   border-radius: 8px;
   padding: 1rem 1.25rem;
   transition: background-color 0.15s ease;
+}
+
+@media (min-width: 768px) {
+  .row {
+    grid-template-columns: 1fr 1.2fr 1fr 0.6fr;
+    align-items: center;
+    gap: 1rem;
+  }
 }
 
 .row:hover {
@@ -84,10 +95,17 @@
 
 .headerRow {
   composes: row;
+  display: none;
   background-color: transparent;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--tertiary);
   border-radius: 0;
+}
+
+@media (min-width: 768px) {
+  .headerRow {
+    display: grid;
+  }
 }
 
 .headerRow:hover {
