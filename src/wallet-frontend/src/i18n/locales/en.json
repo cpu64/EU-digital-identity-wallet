@@ -117,8 +117,14 @@
     "start": "Start Scanning",
     "stop": "Stop Scanning",
     "try_again": "Try Again",
-    "point_camera": "Point your camera at a verification QR code",
-    "camera_denied": "Camera access was denied. Please allow camera access in your browser settings and try again."
+    "point_camera": "Point your camera at a verification QR code or PID provider QR code",
+    "camera_denied": "Camera access was denied. Please allow camera access in your browser settings and try again.",
+    "issuing_pid": "Requesting your PID from the provider...",
+    "err_invalid_offer": "The scanned QR code is not a valid credential offer.",
+    "err_offer_fetch": "Failed to fetch the credential offer",
+    "err_metadata_fetch": "Failed to fetch issuer metadata",
+    "err_invalid_metadata": "Issuer metadata is missing required fields.",
+    "err_issue_pid": "Failed to request PID from provider"
   },
   "sign_document": {
     "title": "Sign PDF Document",

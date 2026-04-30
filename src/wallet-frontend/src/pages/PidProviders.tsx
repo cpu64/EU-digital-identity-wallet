@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { Building2, ChevronRight } from "lucide-react";
 import styles from "../components/PidProvidersPage/PidProviders.module.css";
 import { useTranslation } from "react-i18next";
+import {
+  createPidIssuanceMaterial,
+  storePidIssuanceContext,
+} from "@/lib/pidIssuance";
 
 type PidProvider = {
   domain: string;
@@ -9,28 +13,6 @@ type PidProvider = {
   request_pid_endpoint: string;
   receive_pid_endpoint: string;
 };
-
-function generatePasskey(length: number): string {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const array = new Uint8Array(length);
-  crypto.getRandomValues(array);
-  return Array.from(array, (b) => chars[b % chars.length]).join("");
-}
-
-async function generateKeyPair(): Promise<{
-  publicJwk: JsonWebKey;
-  privateJwk: JsonWebKey;
-}> {
-  const keyPair = await crypto.subtle.generateKey(
-    { name: "ECDSA", namedCurve: "P-256" },
-    true,
-    ["sign", "verify"],
-  );
-  const publicJwk = await crypto.subtle.exportKey("jwk", keyPair.publicKey);
-  const privateJwk = await crypto.subtle.exportKey("jwk", keyPair.privateKey);
-  return { publicJwk, privateJwk };
-}
 
 function PidProviders() {
   const [providers, setProviders] = useState<PidProvider[]>([]);
@@ -62,25 +44,16 @@ function PidProviders() {
 
   async function handleSelectProvider(provider: PidProvider) {
     try {
-      const passkey = generatePasskey(64);
-      const { publicJwk, privateJwk } = await generateKeyPair();
+      const { passkey, privateJwk, minimalPubKey } =
+        await createPidIssuanceMaterial();
 
-      // Store passkey, private key, and provider domain for the callback
-      sessionStorage.setItem("pid_passkey", passkey);
-      sessionStorage.setItem("pid_private_key", JSON.stringify(privateJwk));
-      sessionStorage.setItem("pid_provider_domain", provider.domain);
-      sessionStorage.setItem(
-        "pid_receive_endpoint",
-        provider.receive_pid_endpoint,
-      );
+      storePidIssuanceContext({
+        passkey,
+        privateJwk,
+        providerDomain: provider.domain,
+        receiveEndpoint: provider.receive_pid_endpoint,
+      });
 
-      // Only send the essential EC key fields
-      const minimalPubKey = {
-        crv: publicJwk.crv,
-        kty: publicJwk.kty,
-        x: publicJwk.x,
-        y: publicJwk.y,
-      };
       const pubKeyParam = encodeURIComponent(JSON.stringify(minimalPubKey));
       const passkeyParam = encodeURIComponent(passkey);
       const redirectUri = encodeURIComponent(

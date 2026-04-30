@@ -119,8 +119,14 @@
     "start": "Pradėti nuskaitymą",
     "stop": "Sustabdyti nuskaitymą",
     "try_again": "Bandyti dar kartą",
-    "point_camera": "Nukreipkite kamerą į tvirtinimo QR kodą",
-    "camera_denied": "Prieiga prie kameros uždrausta. Leiskite prieigą naršyklės nustatymuose ir bandykite dar kartą."
+    "point_camera": "Nukreipkite kamerą į tvirtinimo arba PID teikėjo QR kodą",
+    "camera_denied": "Prieiga prie kameros uždrausta. Leiskite prieigą naršyklės nustatymuose ir bandykite dar kartą.",
+    "issuing_pid": "Užklausiamas jūsų PID iš teikėjo...",
+    "err_invalid_offer": "Nuskaitytas QR kodas nėra galiojantis kredencialo pasiūlymas.",
+    "err_offer_fetch": "Nepavyko gauti kredencialo pasiūlymo",
+    "err_metadata_fetch": "Nepavyko gauti teikėjo metaduomenų",
+    "err_invalid_metadata": "Teikėjo metaduomenyse trūksta būtinų laukų.",
+    "err_issue_pid": "Nepavyko užklausti PID iš teikėjo"
   },
   "sign_document": {
     "title": "Pasirašyti PDF dokumentą",

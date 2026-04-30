@@ -1,11 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
-import { QrCode, Camera } from "lucide-react";
+import { QrCode, Camera, Loader2 } from "lucide-react";
 import styles from "../components/ScanPage/Scan.module.css";
 import { useTranslation } from "react-i18next";
+import {
+  createPidIssuanceMaterial,
+  storePidIssuanceContext,
+} from "@/lib/pidIssuance";
 
-type ScanState = "prompt" | "scanning" | "denied" | "error";
+type ScanState = "prompt" | "scanning" | "denied" | "error" | "issuing-pid";
+
+function isCredentialOffer(text: string): boolean {
+  return text.trim().toLowerCase().startsWith("openid-credential-offer://");
+}
+
+function extractCredentialOfferUri(text: string): string | null {
+  const trimmed = text.trim();
+  const queryIndex = trimmed.indexOf("?");
+  if (queryIndex === -1) return null;
+  const params = new URLSearchParams(trimmed.slice(queryIndex + 1));
+  return params.get("credential_offer_uri");
+}
 
 function Scan() {
   const [state, setState] = useState<ScanState>("prompt");
@@ -39,6 +55,81 @@ function Scan() {
     }
   };
 
+  const handlePidProviderOffer = async (offerText: string) => {
+    setState("issuing-pid");
+    try {
+      const offerUri = extractCredentialOfferUri(offerText);
+      if (!offerUri) {
+        throw new Error(t("scan.err_invalid_offer"));
+      }
+
+      const offerResp = await fetch(offerUri);
+      if (!offerResp.ok) {
+        throw new Error(`${t("scan.err_offer_fetch")} (${offerResp.status})`);
+      }
+      const offer = await offerResp.json();
+      const credentialIssuer: string | undefined = offer.credential_issuer;
+      const preAuthCode: string | undefined =
+        offer?.grants?.[
+          "urn:ietf:params:oauth:grant-type:pre-authorized_code"
+        ]?.["pre-authorized_code"];
+
+      if (!credentialIssuer || !preAuthCode) {
+        throw new Error(t("scan.err_invalid_offer"));
+      }
+
+      const metaResp = await fetch(
+        `${credentialIssuer.replace(/\/$/, "")}/.well-known/credential-issuer`,
+      );
+      if (!metaResp.ok) {
+        throw new Error(`${t("scan.err_metadata_fetch")} (${metaResp.status})`);
+      }
+      const metadata = await metaResp.json();
+      const credentialEndpoint: string | undefined =
+        metadata.credential_endpoint;
+      if (!credentialEndpoint) {
+        throw new Error(t("scan.err_invalid_metadata"));
+      }
+
+      const { passkey, privateJwk, minimalPubKey } =
+        await createPidIssuanceMaterial();
+
+      const issueResp = await fetch(credentialEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: preAuthCode,
+          pub_key: minimalPubKey,
+          passkey,
+        }),
+      });
+      if (!issueResp.ok) {
+        const data = await issueResp.json().catch(() => ({}));
+        throw new Error(
+          data.error || `${t("scan.err_issue_pid")} (${issueResp.status})`,
+        );
+      }
+
+      const issuerHost = new URL(credentialIssuer).host;
+      const providerDomain = issuerHost.replace(/^public\./, "");
+      const receiveEndpoint = `${credentialIssuer.replace(/\/$/, "")}/api/receive-pid`;
+
+      storePidIssuanceContext({
+        passkey,
+        privateJwk,
+        providerDomain,
+        receiveEndpoint,
+      });
+
+      navigate("/pid-callback");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : t("scan.err_issue_pid");
+      setError(message);
+      setState("error");
+    }
+  };
+
   useEffect(() => {
     if (state !== "scanning" || !shouldStartRef.current) return;
     shouldStartRef.current = false;
@@ -57,7 +148,12 @@ function Scan() {
           { fps: 10, qrbox: { width: qrSize, height: qrSize } },
           (decodedText) => {
             void safeStopScanner();
-            navigate("/verify", { state: { scannedData: decodedText } });
+
+            if (isCredentialOffer(decodedText)) {
+              handlePidProviderOffer(decodedText);
+            } else {
+              navigate("/verify", { state: { scannedData: decodedText } });
+            }
           },
           () => {},
         );
@@ -116,6 +212,13 @@ function Scan() {
           <button className={styles.stopButton} onClick={stopScanner}>
             {t("scan.stop")}
           </button>
+        </div>
+      )}
+
+      {state === "issuing-pid" && (
+        <div className={styles.permissionSection}>
+          <Loader2 size={48} className={styles.permissionIcon} />
+          <p className={styles.permissionText}>{t("scan.issuing_pid")}</p>
         </div>
       )}
 
