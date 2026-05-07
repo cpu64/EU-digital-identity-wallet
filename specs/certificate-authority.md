@@ -19,7 +19,7 @@ Parameters: None
 
 Returns (200 OK / 500 Internal Server Error) the certificate authority's X.509 certificate in text form (see `src/certs/root-ca.crt` for an example).
 
-### POST /api/sign
+### POST /api/sign/{nonce}
 
 Parameters (a certificate signing request):
 
@@ -37,4 +37,4 @@ Response (200 OK; a certificate):
 }
 ```
 
-Otherwise, may return 401 Unauthorized / 500 Internal Server Error depending on the circumstance.
+Otherwise, may return 500 Internal Server Error depending on the circumstance.
