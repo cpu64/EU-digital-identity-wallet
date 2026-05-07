@@ -42,7 +42,8 @@ async def seed_db(engine: AsyncEngine):
     hasher = argon2.PasswordHasher()
     password_hash = hasher.hash("test123")
 
-    await create_user(engine, "test123", password_hash)
+    if (await get_user(engine, "test123")) is None:
+        await create_user(engine, "test123", password_hash)
 
 
 async def create_user(engine: AsyncEngine, username: str, password_hash: str):

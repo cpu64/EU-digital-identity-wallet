@@ -52,13 +52,13 @@ async def shutdown():
 
 @app.route("/")
 async def index():
-    return redirect(url_for("app.login"))
+    return redirect(url_for("login"))
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 async def login():
-    if current_user.is_authenticated:
-        return redirect(url_for("app.dashboard"))
+    if await current_user.is_authenticated:
+        return redirect(url_for("dashboard"))
     else:
         session.clear()
 
@@ -67,7 +67,7 @@ async def login():
     password = form.get("password")
 
     if username is None or password is None:
-        error = "Invalid login request"
+        error = None
         return await render_template("login.html", error=error)
 
     user = await db.get_user(current_app.db_engine, username)
@@ -84,13 +84,13 @@ async def login():
         return await render_template("login.html", error=error)
 
     login_user(AuthUser(username))
-    return redirect(url_for("app.dashboard"))
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/logout")
 async def logout():
     logout_user()
-    return redirect(url_for("app.login"))
+    return redirect(url_for("login"))
 
 
 @app.route("/dashboard")
