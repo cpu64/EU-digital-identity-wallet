@@ -21,9 +21,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { initData } from "@/data/wallet_data";
-import { SHA256 } from "crypto-js";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslation } from "react-i18next";
+import { md } from "node-forge";
 
 type LoginResponse = { token: string } | { error: string };
 
@@ -74,7 +74,10 @@ function LoginUser({ setToken }: { setToken: (t: string) => void }) {
         sessionStorage.setItem("username", username);
         setToken(contents.token);
 
-        sessionStorage.setItem("blob_key", SHA256(password).toString());
+        var digest = md.sha256.create();
+        digest.update(password, "utf8");
+
+        sessionStorage.setItem("blob_key", digest.digest().toHex());
         await initData();
 
         navigate("/credentials");
