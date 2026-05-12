@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  type FormEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
-import { QrCode, Camera, Loader2 } from "lucide-react";
+import { QrCode, Camera, ClipboardPaste, Loader2 } from "lucide-react";
 import styles from "../components/ScanPage/Scan.module.css";
 import { useTranslation } from "react-i18next";
 import {
@@ -26,6 +32,8 @@ function extractCredentialOfferUri(text: string): string | null {
 function Scan() {
   const [state, setState] = useState<ScanState>("prompt");
   const [error, setError] = useState("");
+  const [pastedText, setPastedText] = useState("");
+  const [pasteError, setPasteError] = useState("");
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const shouldStartRef = useRef(false);
   const navigate = useNavigate();
@@ -37,7 +45,7 @@ function Scan() {
     setState("scanning");
   };
 
-  const safeStopScanner = async () => {
+  const safeStopScanner = useCallback(async () => {
     const scanner = scannerRef.current;
     scannerRef.current = null;
     if (!scanner) return;
@@ -53,81 +61,112 @@ function Scan() {
     } catch {
       /* ignore */
     }
-  };
+  }, []);
 
-  const handlePidProviderOffer = async (offerText: string) => {
-    setState("issuing-pid");
-    try {
-      const offerUri = extractCredentialOfferUri(offerText);
-      if (!offerUri) {
-        throw new Error(t("scan.err_invalid_offer"));
-      }
+  const handlePidProviderOffer = useCallback(
+    async (offerText: string) => {
+      setState("issuing-pid");
+      try {
+        const offerUri = extractCredentialOfferUri(offerText);
+        if (!offerUri) {
+          throw new Error(t("scan.err_invalid_offer"));
+        }
 
-      const offerResp = await fetch(offerUri);
-      if (!offerResp.ok) {
-        throw new Error(`${t("scan.err_offer_fetch")} (${offerResp.status})`);
-      }
-      const offer = await offerResp.json();
-      const credentialIssuer: string | undefined = offer.credential_issuer;
-      const preAuthCode: string | undefined =
-        offer?.grants?.[
-          "urn:ietf:params:oauth:grant-type:pre-authorized_code"
-        ]?.["pre-authorized_code"];
+        const offerResp = await fetch(offerUri);
+        if (!offerResp.ok) {
+          throw new Error(`${t("scan.err_offer_fetch")} (${offerResp.status})`);
+        }
+        const offer = await offerResp.json();
+        const credentialIssuer: string | undefined = offer.credential_issuer;
+        const preAuthCode: string | undefined =
+          offer?.grants?.[
+            "urn:ietf:params:oauth:grant-type:pre-authorized_code"
+          ]?.["pre-authorized_code"];
 
-      if (!credentialIssuer || !preAuthCode) {
-        throw new Error(t("scan.err_invalid_offer"));
-      }
+        if (!credentialIssuer || !preAuthCode) {
+          throw new Error(t("scan.err_invalid_offer"));
+        }
 
-      const metaResp = await fetch(
-        `${credentialIssuer.replace(/\/$/, "")}/.well-known/credential-issuer`,
-      );
-      if (!metaResp.ok) {
-        throw new Error(`${t("scan.err_metadata_fetch")} (${metaResp.status})`);
-      }
-      const metadata = await metaResp.json();
-      const credentialEndpoint: string | undefined =
-        metadata.credential_endpoint;
-      if (!credentialEndpoint) {
-        throw new Error(t("scan.err_invalid_metadata"));
-      }
-
-      const { passkey, privateJwk, minimalPubKey } =
-        await createPidIssuanceMaterial();
-
-      const issueResp = await fetch(credentialEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: preAuthCode,
-          pub_key: minimalPubKey,
-          passkey,
-        }),
-      });
-      if (!issueResp.ok) {
-        const data = await issueResp.json().catch(() => ({}));
-        throw new Error(
-          data.error || `${t("scan.err_issue_pid")} (${issueResp.status})`,
+        const metaResp = await fetch(
+          `${credentialIssuer.replace(/\/$/, "")}/.well-known/credential-issuer`,
         );
+        if (!metaResp.ok) {
+          throw new Error(
+            `${t("scan.err_metadata_fetch")} (${metaResp.status})`,
+          );
+        }
+        const metadata = await metaResp.json();
+        const credentialEndpoint: string | undefined =
+          metadata.credential_endpoint;
+        if (!credentialEndpoint) {
+          throw new Error(t("scan.err_invalid_metadata"));
+        }
+
+        const { passkey, privateJwk, minimalPubKey } =
+          await createPidIssuanceMaterial();
+
+        const issueResp = await fetch(credentialEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code: preAuthCode,
+            pub_key: minimalPubKey,
+            passkey,
+          }),
+        });
+        if (!issueResp.ok) {
+          const data = await issueResp.json().catch(() => ({}));
+          throw new Error(
+            data.error || `${t("scan.err_issue_pid")} (${issueResp.status})`,
+          );
+        }
+
+        const issuerHost = new URL(credentialIssuer).host;
+        const providerDomain = issuerHost.replace(/^public\./, "");
+        const receiveEndpoint = `${credentialIssuer.replace(/\/$/, "")}/api/receive-pid`;
+
+        storePidIssuanceContext({
+          passkey,
+          privateJwk,
+          providerDomain,
+          receiveEndpoint,
+        });
+
+        navigate("/pid-callback");
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : t("scan.err_issue_pid");
+        setError(message);
+        setState("error");
+      }
+    },
+    [navigate, t],
+  );
+
+  const handleQrPayload = useCallback(
+    async (payload: string) => {
+      const trimmedPayload = payload.trim();
+      if (!trimmedPayload) {
+        setPasteError(t("scan.err_empty"));
+        return;
       }
 
-      const issuerHost = new URL(credentialIssuer).host;
-      const providerDomain = issuerHost.replace(/^public\./, "");
-      const receiveEndpoint = `${credentialIssuer.replace(/\/$/, "")}/api/receive-pid`;
+      setError("");
+      setPasteError("");
+      await safeStopScanner();
 
-      storePidIssuanceContext({
-        passkey,
-        privateJwk,
-        providerDomain,
-        receiveEndpoint,
-      });
+      if (isCredentialOffer(trimmedPayload)) {
+        await handlePidProviderOffer(trimmedPayload);
+      } else {
+        navigate("/verify", { state: { scannedData: trimmedPayload } });
+      }
+    },
+    [handlePidProviderOffer, navigate, safeStopScanner, t],
+  );
 
-      navigate("/pid-callback");
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : t("scan.err_issue_pid");
-      setError(message);
-      setState("error");
-    }
+  const handlePasteSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    void handleQrPayload(pastedText);
   };
 
   useEffect(() => {
@@ -147,13 +186,7 @@ function Scan() {
           { facingMode: "environment" },
           { fps: 10, qrbox: { width: qrSize, height: qrSize } },
           (decodedText) => {
-            void safeStopScanner();
-
-            if (isCredentialOffer(decodedText)) {
-              handlePidProviderOffer(decodedText);
-            } else {
-              navigate("/verify", { state: { scannedData: decodedText } });
-            }
+            void handleQrPayload(decodedText);
           },
           () => {},
         );
@@ -174,7 +207,7 @@ function Scan() {
     };
 
     init();
-  }, [state, navigate]);
+  }, [handleQrPayload, safeStopScanner, state, t]);
 
   const stopScanner = async () => {
     await safeStopScanner();
@@ -185,7 +218,7 @@ function Scan() {
     return () => {
       void safeStopScanner();
     };
-  }, []);
+  }, [safeStopScanner]);
 
   return (
     <div className={styles.container}>
@@ -201,6 +234,35 @@ function Scan() {
             {t("scan.start")}
           </button>
         </div>
+      )}
+
+      {(state === "prompt" || state === "denied" || state === "error") && (
+        <form className={styles.pasteSection} onSubmit={handlePasteSubmit}>
+          <label className={styles.pasteLabel} htmlFor="qr-payload-input">
+            {t("scan.paste_label")}
+          </label>
+          <textarea
+            id="qr-payload-input"
+            className={styles.pasteTextarea}
+            rows={5}
+            value={pastedText}
+            onChange={(event) => {
+              setPastedText(event.target.value);
+              if (pasteError) setPasteError("");
+            }}
+            placeholder={t("scan.paste_placeholder")}
+            spellCheck={false}
+          />
+          {pasteError && <p className={styles.error}>{pasteError}</p>}
+          <button
+            className={styles.pasteButton}
+            type="submit"
+            disabled={!pastedText.trim()}
+          >
+            <ClipboardPaste size={18} />
+            {t("scan.use_pasted")}
+          </button>
+        </form>
       )}
 
       {state === "scanning" && (

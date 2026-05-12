@@ -52,6 +52,73 @@
   text-align: center;
 }
 
+.pasteSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 520px;
+  margin: 2rem auto 0;
+  padding: 1rem;
+  border: 1px solid var(--tertiary);
+  border-radius: 8px;
+  background-color: var(--app-surface);
+}
+
+.pasteLabel {
+  color: var(--light-2);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.pasteTextarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  border: 1px solid var(--tertiary);
+  border-radius: 8px;
+  padding: 0.75rem;
+  background-color: var(--dark-1);
+  color: var(--light-1);
+  font: inherit;
+  line-height: 1.45;
+}
+
+.pasteTextarea:focus {
+  border-color: var(--accent-2);
+  outline: none;
+}
+
+.pasteTextarea::placeholder {
+  color: var(--gray-1);
+}
+
+.pasteButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  padding: 0.6rem 1.1rem;
+  background-color: var(--accent-2);
+  color: var(--light-2);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.pasteButton:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.pasteButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .startButton {
   padding: 0.6rem 1.6rem;
   background-color: var(--accent-2);
