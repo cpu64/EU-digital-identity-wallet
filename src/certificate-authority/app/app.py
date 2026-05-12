@@ -16,12 +16,15 @@ from quart import (
     Blueprint,
     Quart,
     current_app,
+    jsonify,
     render_template,
     request,
     session,
     url_for,
 )
 from app import db
+from app import signing
+from cryptography.hazmat.primitives import serialization
 
 app = Quart(__name__)
 main = Blueprint("main", __name__)
@@ -44,6 +47,14 @@ async def startup():
     app.db_engine = await db.init_db()
     app.blob_dir = "blob"
     os.makedirs(app.blob_dir, exist_ok=True)
+
+    cert_info = signing.load_cert_info()
+    if cert_info == None:
+        cert_info = signing.generate_root_cert()
+        signing.write_cert_info(cert_info[0], cert_info[1])
+
+    app.cert_key = cert_info[0]
+    app.cert = cert_info[1]
 
 
 @app.after_serving
@@ -112,6 +123,42 @@ async def get_sign_url():
         signing_uuids[username] = str(uuid.uuid4())
 
     return await render_template("dashboard.html", uuid=signing_uuids[username])
+
+
+def contains_uuid(id):
+    for k, v in signing_uuids.values():
+        if v == id:
+            return True
+    return False
+
+
+@app.route("/api/get_ca_cert")
+async def get_ca_cert():
+    cert_text = app.cert.public_bytes(encoding=serialization.Encoding.PEM)
+
+    return cert_text, 200
+
+
+@app.route("/api/sign/<id>", methods=["POST"])
+async def sign(id):
+    if not contains_uuid(id):
+        return "Invalid signing request ID", 401
+
+    signing_uuids = {k: v for k, v in signing_uuids.items() if v != id}
+
+    req = await request.get_json()
+    if req is None or "csr" not in req:
+        return "Malformed certificate signing request", 400
+
+    try:
+        cert_pem = signing.handle_csr(req["csr"], app.cert_key, app.cert)
+        if cert_pem is None:
+            return "Invalid certificate signing request", 400
+    except Exception as e:
+        print(e)
+        return "Internal Server Error", 500
+
+    return jsonify({"crt": cert_pem}), 200
 
 
 if __name__ == "__main__":
