@@ -23,6 +23,22 @@
         }
       ],
       "subProcess": true
+    },
+    {
+      "name": "Debug CA",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "ca.wallet.test",
+        "port": 5679
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/src/certificate-authority",
+          "remoteRoot": "/app"
+        }
+      ],
+      "subProcess": true
     }
   ],
   "compounds": [

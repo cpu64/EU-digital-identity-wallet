@@ -27,6 +27,16 @@ services:
       - "5678:5678"
     command: sh -c "uv run python -m debugpy --listen 0.0.0.0:5678 -m quart run --host 0.0.0.0 --port 8000"
 
+  certificate-authority:
+    volumes:
+      - ./certificate-authority:/app
+    environment:
+      - QUART_ENV=development
+      - QUART_APP=app.app:app
+    ports:
+      - "5679:5679"
+    command: sh -c "uv run python -m debugpy --listen 0.0.0.0:5679 -m quart run --host 0.0.0.0 --port 8000"
+
   wallet-frontend:
     image: node:25-alpine
     working_dir: /app

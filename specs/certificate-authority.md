@@ -19,7 +19,7 @@ Parameters: None
 
 Returns (200 OK / 500 Internal Server Error) the certificate authority's X.509 certificate in text form (see `src/certs/root-ca.crt` for an example).
 
-### POST /api/sign/{nonce}
+### POST /api/sign/{guid}
 
 Parameters (a certificate signing request):
 

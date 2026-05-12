@@ -22,6 +22,7 @@ Add this to your `/etc/hosts` (or `C:\Windows\System32\drivers\etc\hosts` on win
 127.0.0.1 public.wallet-backend.wallet.test
 127.0.0.1 wallet-frontend.wallet.test
 127.0.0.1 public.wallet-frontend.wallet.test
+127.0.0.1 ca.wallet.test
 ```
 
 Install the root CA certificate `certs/root-ca.crt` on your system:

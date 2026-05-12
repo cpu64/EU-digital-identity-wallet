@@ -1,0 +1,16 @@
+[project]
+name = "certificate-authority"
+version = "0.1.0"
+description = ""
+requires-python = ">=3.13"
+authors = [{ name = "k688", email = "k688@k688.c" }]
+dependencies = [
+    "argon2-cffi>=25.1.0",
+    "asyncpg>=0.31.0",
+    "cryptography>=48.0.0",
+    "debugpy>=1.8.20",
+    "quart>=0.20.0",
+    "quart-auth>=0.11.0",
+    "quart-cors>=0.8.0",
+    "sqlalchemy[asyncio]>=2.0.49",
+]
