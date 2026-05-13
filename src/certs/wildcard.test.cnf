@@ -20,3 +20,4 @@ DNS.4 = *.trusted-list.wallet.test
 DNS.5 = *.pid-provider.wallet.test
 DNS.6 = *.wallet-backend.wallet.test
 DNS.7 = *.wallet-frontend.wallet.test
+DNS.8 = *.wallet-cs.wallet.test

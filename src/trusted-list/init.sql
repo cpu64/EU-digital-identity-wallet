@@ -13,6 +13,13 @@ CREATE TABLE IF NOT EXISTS relying_parties (
     proof_endpoint TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS certificate_authorities (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    issue_endpoint TEXT NOT NULL,
+    public_key TEXT NOT NULL
+);
+
 INSERT INTO pid_providers (
     domain,
     name,
@@ -44,4 +51,25 @@ INSERT INTO relying_parties (
 VALUES (
     'Hot Sauce',
     'https://public.relying-party.wallet.test/api/proof'
+);
+
+
+INSERT INTO certificate_authorities (
+    name,
+    issue_endpoint,
+    public_key
+)
+VALUES (
+    'Example CA',
+    'https://wallet-ca.wallet.test/api/issue-certificate',
+    '{
+        "alg": "ES256",
+        "crv": "P-256",
+        "ext": true,
+        "key_ops": ["verify"],
+        "kty": "EC",
+        "x": "KD62D4IWv62ggzFUxGC07gcYtdze9QxI-NHH2jNwWtg",
+        "y": "_wZAjJEAZX3jYrZ-PyvUQWimXwn0NK0LziMCS6u-kfE",
+        "kid": "UDZq26JcGpvWOrsH8wCiZfUHE+PdRu8+lcH3u/9hHjc="
+    }'
 );

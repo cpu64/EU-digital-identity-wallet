@@ -1,0 +1,17 @@
+# Virtual environments
+**/venv/
+**/.venv/
+**/.env
+**/.env.*
+
+# Git files
+**/.git/
+**/.gitignore
+
+# Docker files
+**/Dockerfile
+**/.dockerignore
+
+# IDE/editor files
+**/.vscode/
+**/.idea/

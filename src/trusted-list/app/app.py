@@ -73,8 +73,31 @@ def load_relying_parties():
         for row in rows
     ]
 
+def load_certificate_authorities():
+    conn = get_db()
+
+    rows = conn.execute("""
+        SELECT
+            name,
+            issue_endpoint,
+            public_key
+        FROM certificate_authorities
+    """).fetchall()
+
+    conn.close()
+
+    return [
+        {
+            "name": row["name"],
+            "issue_endpoint": row["issue_endpoint"],
+            "public_key": json.loads(row["public_key"]),
+        }
+        for row in rows
+    ]
+
 PID_PROVIDER_LIST = load_pid_providers()
 RELYING_PARTY_LIST = load_relying_parties()
+CERTIFICATE_AUTHORITIES_LIST = load_certificate_authorities()
 
 @app.errorhandler(HTTPException)
 async def handle_http_exception(error):
@@ -202,6 +225,31 @@ async def get_relying_party():
             return jsonify(rp)
 
     abort(404, description="Relying party not found")
+
+
+@public_route('/api/trusted-list/certificate-authority')
+async def get_certificate_authorities():
+    fields = request.args.get("fields")
+    result = filter_fields(CERTIFICATE_AUTHORITIES_LIST, fields)
+    return jsonify(result)
+
+
+@public_route('/api/certificate-authority')
+async def get_certificate_authority():
+    args = request.args
+
+    param = validate_single_param(args, [
+        "name",
+        "issue_endpoint",
+    ])
+
+    value = args.get(param)
+
+    for rp in CERTIFICATE_AUTHORITIES_LIST:
+        if rp.get(param) == value:
+            return jsonify(rp)
+
+    abort(404, description="Certificate authority not found")
 
 
 app.register_blueprint(main)
