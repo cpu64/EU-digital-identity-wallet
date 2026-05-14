@@ -8,7 +8,7 @@ spec:
   template:
     metadata:
       annotations:
-        run.googleapis.com/client-name: "deploy-1778785571"
+        run.googleapis.com/client-name: "deploy-1778786518"
         run.googleapis.com/container-dependencies: |
           {"wallet-frontend":["wallet-backend"], "wallet-backend":["pid-db"], "pid-provider":["pid-db"], "trusted-list":["pid-db"], "certificate-authority":["pid-db"], "relying-party":["trusted-list"], "reverse-proxy":["relying-party", "trusted-list", "pid-provider", "wallet-backend", "wallet-frontend", "certificate-authority"]}
     spec:
@@ -18,7 +18,7 @@ spec:
           command: ["/cloud-run-entrypoint.sh"]
           env:
             - name: DEPLOY_ID
-              value: "deploy-1778785571"
+              value: "deploy-1778786518"
           ports:
             - containerPort: 8080
         - name: relying-party
