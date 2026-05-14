@@ -221,7 +221,7 @@ GET /api/trusted-list/certificate-authority?fields=name,public_key,issue_endpoin
 [
   {
     "name": "Example CA",
-    "issue_endpoint": "https://wallet-ca/api/issue-certificate",
+    "issue_endpoint": "https://wallet-ca.example.com/api/issue-certificate",
     "public_key": {
       "kty": "EC",
       "crv": "P-256",
@@ -264,7 +264,7 @@ GET /api/certificate-authority?name=Example%20CA
 ```json
 {
   "name": "Example CA",
-  "issue_endpoint": "https://wallet-ca/api/issue-certificate",
+  "issue_endpoint": "https://wallet-ca.example.com/api/issue-certificate",
   "public_key": {
     "kty": "EC",
     "crv": "P-256",

@@ -3,6 +3,8 @@ from quart import Quart, Blueprint, jsonify, request, abort
 from quart_cors import cors
 from werkzeug.exceptions import HTTPException
 import logging
+import sqlite3
+import json
 logger = logging.getLogger(__name__)
 
 FIRST_DOMAIN = 'trusted-list.wallet.test'
@@ -16,34 +18,86 @@ main_route = main.route
 public_route = public.route
 cors(public, allow_origin="*")
 
-PID_PROVIDER_LIST = [
-  {
-    "domain": "wallet.test",
-    "name": "Example Provider",
-    "request_pid_endpoint": "https://pid-provider.wallet.test/api/request-pid",
-    "receive_pid_endpoint": "https://public.pid-provider.wallet.test/api/receive-pid",
-    "public_key": {
-        "alg": "ES256",
-        "crv": "P-256",
-        "ext": True,
-        "key_ops": [
-            "verify"
-        ],
-        "kty": "EC",
-        "x": "MoFr8EwN78CjCfeFnPVULkw6BVEVfrroAiRSD-jnWLU",
-        "y": "DWJ4SZW22VUYBgVVyXSQ5cgIbSQN3EhakRmf1kW95Aw",
-        "kid": "T/XuctRSz2wkrzY0rdzraRrgA9PaJqL104fgH34d5iE="
-    }
-  },
-]
 
-RELYING_PARTY_LIST = [
-  {
-    "name": "Hot Sauce",
-    "proof_endpoint": "https://public.relying-party.wallet.test/api/proof",
-  },
-]
+DB_PATH = "app.db"
 
+def get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def load_pid_providers():
+    conn = get_db()
+
+    rows = conn.execute("""
+        SELECT
+            domain,
+            name,
+            request_pid_endpoint,
+            receive_pid_endpoint,
+            public_key
+        FROM pid_providers
+    """).fetchall()
+
+    conn.close()
+
+    return [
+        {
+            "domain": row["domain"],
+            "name": row["name"],
+            "request_pid_endpoint": row["request_pid_endpoint"],
+            "receive_pid_endpoint": row["receive_pid_endpoint"],
+            "public_key": json.loads(row["public_key"]),
+        }
+        for row in rows
+    ]
+
+
+def load_relying_parties():
+    conn = get_db()
+
+    rows = conn.execute("""
+        SELECT
+            name,
+            proof_endpoint
+        FROM relying_parties
+    """).fetchall()
+
+    conn.close()
+
+    return [
+        {
+            "name": row["name"],
+            "proof_endpoint": row["proof_endpoint"],
+        }
+        for row in rows
+    ]
+
+def load_certificate_authorities():
+    conn = get_db()
+
+    rows = conn.execute("""
+        SELECT
+            name,
+            issue_endpoint,
+            public_key
+        FROM certificate_authorities
+    """).fetchall()
+
+    conn.close()
+
+    return [
+        {
+            "name": row["name"],
+            "issue_endpoint": row["issue_endpoint"],
+            "public_key": json.loads(row["public_key"]),
+        }
+        for row in rows
+    ]
+
+PID_PROVIDER_LIST = load_pid_providers()
+RELYING_PARTY_LIST = load_relying_parties()
+CERTIFICATE_AUTHORITIES_LIST = load_certificate_authorities()
 
 @app.errorhandler(HTTPException)
 async def handle_http_exception(error):
@@ -171,6 +225,31 @@ async def get_relying_party():
             return jsonify(rp)
 
     abort(404, description="Relying party not found")
+
+
+@public_route('/api/trusted-list/certificate-authority')
+async def get_certificate_authorities():
+    fields = request.args.get("fields")
+    result = filter_fields(CERTIFICATE_AUTHORITIES_LIST, fields)
+    return jsonify(result)
+
+
+@public_route('/api/certificate-authority')
+async def get_certificate_authority():
+    args = request.args
+
+    param = validate_single_param(args, [
+        "name",
+        "issue_endpoint",
+    ])
+
+    value = args.get(param)
+
+    for rp in CERTIFICATE_AUTHORITIES_LIST:
+        if rp.get(param) == value:
+            return jsonify(rp)
+
+    abort(404, description="Certificate authority not found")
 
 
 app.register_blueprint(main)

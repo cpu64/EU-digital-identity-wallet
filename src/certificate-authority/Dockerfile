@@ -11,8 +11,8 @@ ENV PATH="/root/.local/bin/:$PATH"
 
 WORKDIR /app
 
-COPY . /app
+COPY pyproject.toml uv.lock .python-version ./
 
 RUN uv sync --locked
 
-COPY . .
+COPY ./app/ ./app/
