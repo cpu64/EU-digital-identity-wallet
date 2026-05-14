@@ -14,4 +14,5 @@ RUN npm run build
 FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY cloud-run-nginx.conf /etc/nginx/cloud-run-nginx.conf
 COPY --from=build /build/dist /app

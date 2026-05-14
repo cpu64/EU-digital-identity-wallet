@@ -1,4 +1,5 @@
 import { AES, enc } from "crypto-js";
+import { BACKEND_URL } from "../config";
 
 export type Credential = {
   id: string;
@@ -54,7 +55,7 @@ export const updateData = async (newData: WalletData) => {
   const blob = AES.encrypt(JSON.stringify(newData), key).toString();
 
   const response = await fetch(
-    "https://wallet-backend.wallet.test/api/store_blob",
+    `${BACKEND_URL}/api/store_blob`,
     {
       method: "POST",
       body: JSON.stringify({ blob: blob }),
@@ -72,7 +73,7 @@ export const updateData = async (newData: WalletData) => {
 
 export const getData = async (): Promise<WalletData> => {
   const response = await fetch(
-    "https://wallet-backend.wallet.test/api/get_blob",
+    `${BACKEND_URL}/api/get_blob`,
     {
       method: "GET",
       headers: {

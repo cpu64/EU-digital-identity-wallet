@@ -58,9 +58,12 @@ function Scan() {
   const handlePidProviderOffer = async (offerText: string) => {
     setState("issuing-pid");
     try {
-      const offerUri = extractCredentialOfferUri(offerText);
+      let offerUri = extractCredentialOfferUri(offerText);
       if (!offerUri) {
         throw new Error(t("scan.err_invalid_offer"));
+      }
+      if (offerUri.startsWith("/")) {
+          offerUri = window.location.origin + offerUri;
       }
 
       const offerResp = await fetch(offerUri);
@@ -110,7 +113,11 @@ function Scan() {
         );
       }
 
-      const issuerHost = new URL(credentialIssuer).host;
+      let absoluteIssuer = credentialIssuer;
+      if (absoluteIssuer.startsWith("/")) {
+          absoluteIssuer = window.location.origin + absoluteIssuer;
+      }
+      const issuerHost = new URL(absoluteIssuer).host;
       const providerDomain = issuerHost.replace(/^public\./, "");
       const receiveEndpoint = `${credentialIssuer.replace(/\/$/, "")}/api/receive-pid`;
 

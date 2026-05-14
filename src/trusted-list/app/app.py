@@ -8,12 +8,12 @@ logger = logging.getLogger(__name__)
 FIRST_DOMAIN = 'trusted-list.wallet.test'
 SECOND_DOMAIN = 'public.trusted-list.wallet.test'
 
-app = Quart(__name__, host_matching=True, static_host=FIRST_DOMAIN)
+app = Quart(__name__)
 
 main = Blueprint('main', __name__)
 public = Blueprint('public', __name__)
-main_route = partial(main.route, host=FIRST_DOMAIN)
-public_route = partial(public.route, host=SECOND_DOMAIN)
+main_route = main.route
+public_route = public.route
 cors(public, allow_origin="*")
 
 PID_PROVIDER_LIST = [

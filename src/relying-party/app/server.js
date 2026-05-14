@@ -176,7 +176,8 @@ app.post("/api/proof", async (req, res) => {
     if (!proof || typeof proof !== 'string') return res.status(400).json({ error: "Invalid proof format" });
 
     try {
-        const tlRes = await fetch("https://public.trusted-list.wallet.test/api/trusted-list/pid-provider");
+        const tlUrl = process.env.TRUSTED_LIST_URL || "https://public.trusted-list.wallet.test/api/trusted-list/pid-provider";
+        const tlRes = await fetch(tlUrl);
         if (!tlRes.ok) throw new Error("Failed to fetch trusted list");
         const pidProviders = await tlRes.json();
 

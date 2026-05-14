@@ -5,6 +5,7 @@ import { Download, FileUp, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useTranslation } from "react-i18next";
+import { BACKEND_URL } from "../config";
 
 function SignDocument() {
   const [file, setFile] = useState<File | null>(null);
@@ -38,7 +39,7 @@ function SignDocument() {
 
     try {
       const response = await fetch(
-        "https://wallet-backend.wallet.test/api/sign",
+        `${BACKEND_URL}/api/sign`,
         {
           method: "POST",
           body: form,

@@ -2,10 +2,12 @@
 <html lang="en">
 
 <head>
+    <base href="/" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hot Sauce Shop</title>
     <meta name="description" content="Browse and buy hot sauces. Age verification required for extreme varieties." />
+    <script>window.BASE_URL = window.location.pathname.startsWith('/proxy/relying-party') ? '/proxy/relying-party' : '/';</script>
 </head>
 
 <body>

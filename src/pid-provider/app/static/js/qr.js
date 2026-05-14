@@ -26,10 +26,14 @@ function startTimer() {
 
 function refreshQR() {
     timeLeft = 120;
-    fetch('/api/refresh-qr', { method: 'GET' })
+    fetch('https://pid-provider.wallet.test/api/refresh-qr', { method: 'GET' })
         .then(response => response.json())
         .then(data => {
-            const offer_uri = data.offer_uri;
+            let offer_uri = data.offer_uri;
+            
+            if (offer_uri && offer_uri.includes('credential_offer_uri=/')) {
+                offer_uri = offer_uri.replace('credential_offer_uri=/', 'credential_offer_uri=' + window.location.origin + '/');
+            }
 
             qrContainer.innerHTML = '';
 

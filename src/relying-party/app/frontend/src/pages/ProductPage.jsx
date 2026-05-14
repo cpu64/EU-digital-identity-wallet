@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ReviewDialog } from '@/components/ReviewDialog'
 import * as cart from '@/services/cart'
+import { API_BASE, getAssetUrl } from '../config'
 
 function fmt(cents) { return `€${(cents / 100).toFixed(2)}` }
 function fmtScoville(n) { return n.toLocaleString('en-US') }
@@ -30,7 +31,7 @@ export function ProductPage() {
     const [reviewOpen, setReviewOpen] = useState(false)
 
     const load = useCallback(() => {
-        fetch(`/api/products/${id}`)
+        fetch(`${API_BASE}/api/products/${id}`)
             .then(r => { if (!r.ok) throw new Error(); return r.json() })
             .then(setData)
             .catch(() => setData(null))
@@ -60,7 +61,7 @@ export function ProductPage() {
 
             <div className="grid md:grid-cols-2 gap-8 mb-12">
                 <div className="aspect-square bg-muted dark:bg-slate-800 rounded-2xl overflow-hidden border dark:border-slate-800">
-                    <img src={`/images/products/${product.id}.jpg`} alt={product.name} className="w-full h-full object-cover" />
+                    <img src={getAssetUrl(`/images/products/${product.id}.jpg`)} alt={product.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex flex-col justify-center py-4">
                     {extreme && <Badge variant="destructive" className="w-fit mb-4 text-sm">Extreme — 18+ Verification Required</Badge>}

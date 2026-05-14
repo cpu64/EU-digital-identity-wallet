@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import * as cart from '@/services/cart'
+import { API_BASE, getAssetUrl } from '../config'
 
 function fmt(cents) { return `€${(cents / 100).toFixed(2)}` }
 function fmtScoville(n) { return n.toLocaleString('en-US') }
 
 function ProductCard({ product }) {
     const extreme = product.scoville > 1_000_000
-    const imgUrl = `/images/products/${product.id}.jpg`
+    const imgUrl = getAssetUrl(`/images/products/${product.id}.jpg`)
 
     return (
         <div className={`group relative flex flex-col border dark:border-slate-800 rounded-2xl bg-card dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${extreme ? 'ring-1 ring-destructive/30' : ''}`}>
@@ -42,7 +43,7 @@ export function ShopPage() {
     const [error, setError] = useState('')
 
     useEffect(() => {
-        fetch('/api/products')
+        fetch(`${API_BASE}/api/products`)
             .then(r => r.json())
             .then(setProducts)
             .catch(() => setError('Failed to load products.'))

@@ -7,9 +7,12 @@ import "./styles/global.css";
 import "./index.css";
 import App from "./App.tsx";
 
+const baseTag = document.querySelector('base');
+const basename = baseTag ? new URL(baseTag.href).pathname : '/';
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <ThemeProvider>
         <App />
       </ThemeProvider>

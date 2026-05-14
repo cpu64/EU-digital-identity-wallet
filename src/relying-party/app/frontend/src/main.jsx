@@ -7,9 +7,12 @@ import { init as initWallet } from './services/wallet'
 import './index.css'
 
 initWallet().then(() => {
+    const baseTag = document.querySelector('base');
+    const basename = baseTag ? new URL(baseTag.href).pathname : '/';
+
     createRoot(document.getElementById('root')).render(
         <StrictMode>
-            <BrowserRouter>
+            <BrowserRouter basename={basename}>
                 <App />
                 <Toaster position="top-right" richColors />
             </BrowserRouter>

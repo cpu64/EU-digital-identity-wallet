@@ -27,15 +27,16 @@ export async function requestReviewClaims(options = {}) {
 }
 
 import { showWalletRequestDialog } from '../components/WalletRequestDialog';
+import { API_BASE, PUBLIC_RP_URL } from '../config';
 
 async function handleWalletRequest(requestPayload, options = {}) {
-    const res = await fetch('/api/wallet/request', { method: 'POST' });
+    const res = await fetch(`${API_BASE}/api/wallet/request`, { method: 'POST' });
     const { nonce } = await res.json();
 
     const specRequest = {
         ...requestPayload,
         nonce,
-        proof_endpoint: `https://public.${window.location.hostname}/api/proof`,
+        proof_endpoint: `${PUBLIC_RP_URL}/api/proof`,
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
     };
 

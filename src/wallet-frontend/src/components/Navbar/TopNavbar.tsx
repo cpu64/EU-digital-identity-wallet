@@ -1,5 +1,6 @@
 import { User, Sun, Moon, Menu } from "lucide-react";
 import styles from "./TopNavbar.module.css";
+import { getAssetUrl } from "../../config";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
@@ -182,7 +183,7 @@ function TopNavbar({
           )}
           <NavLink to="/credentials" className={styles.logoLink}>
             <img
-              src="/images/wallet-logo.png"
+              src={getAssetUrl("/images/wallet-logo.png")}
               alt="Wallet Logo"
               className={styles.logo}
             />
