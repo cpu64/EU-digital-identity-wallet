@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mano Duomenys</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css') }}">
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <link rel="stylesheet" href="https://pid-provider.wallet.test/static/css/stylesheet.css">
+    <script src="https://pid-provider.wallet.test/static/js/theme.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
@@ -43,7 +43,7 @@
             </div>
 
             <div class="actions">
-                <a href="/logout" class="btn-logout">Atsijungti</a>
+                <a href="https://pid-provider.wallet.test/logout" class="btn-logout">Atsijungti</a>
             </div>
 
             <div class="code-container">
@@ -51,7 +51,7 @@
                     QR kodas PID išdavimui (galioja: <span id="timer">00:00</span>):
                 </p>
                 <div class="qr-container" id="qrcode"></div>
-                <script src="{{ url_for('static', filename='js/qr.js') }}"></script>
+                <script src="https://pid-provider.wallet.test/static/js/qr.js"></script>
                 <div class="code-row">
                     <code id="offer_uri" class="offer_uri"></code>
                     <div class="btn-group">

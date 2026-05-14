@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { FormField, Textarea } from '@/components/ui/form'
 import { Star } from 'lucide-react'
 import * as wallet from '@/services/wallet'
+import { API_BASE } from '../config'
 
 export function ReviewDialog({ open, productId, onClose, onPosted }) {
     const [fields, setFields] = useState({ body: '', rating: 5 })
@@ -27,7 +28,7 @@ export function ReviewDialog({ open, productId, onClose, onPosted }) {
                 description: "Share your verified First Name from your EUDI Wallet to post a review."
             })
 
-            const res = await fetch('/api/reviews', {
+            const res = await fetch(`${API_BASE}/api/reviews`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

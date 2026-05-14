@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import QRCode from "react-qr-code";
+import { API_BASE } from '../config';
 
 let dialogHandler = null;
 
@@ -33,7 +34,7 @@ export function WalletRequestDialog() {
             return new Promise((resolve, reject) => {
                 const interval = setInterval(async () => {
                     try {
-                        const pollRes = await fetch(`/api/wallet/status/${payload.nonce}`);
+                        const pollRes = await fetch(`${API_BASE}/api/wallet/status/${payload.nonce}`);
                         if (pollRes.status === 200) {
                             const data = await pollRes.json();
                             clearInterval(interval);

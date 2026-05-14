@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
+import { BACKEND_URL, getAssetUrl } from "../config";
 import {
   Dialog,
   DialogClose,
@@ -62,7 +63,7 @@ function RegisterUser() {
       };
 
       const response = await fetch(
-        "https://wallet-backend.wallet.test/api/register",
+        `${BACKEND_URL}/api/register`,
         {
           method: "POST",
           body: JSON.stringify(request),
@@ -89,7 +90,7 @@ function RegisterUser() {
       <Card className="w-full sm:max-w-md">
         <div className={styles.title}>
           <img
-            src="/images/wallet-logo.png"
+            src={getAssetUrl("/images/wallet-logo.png")}
             alt="Wallet Logo"
             className={styles.logo}
           />

@@ -12,9 +12,11 @@ import * as walletInterface from './walletInterface.js';
 
 let mode = 'mock'
 
+import { API_BASE } from '../config'
+
 export async function init() {
     try {
-        const res = await fetch('/api/wallet/mode')
+        const res = await fetch(`${API_BASE}/api/wallet/mode`)
         mode = (await res.json()).mode ?? 'mock'
     } catch {
         mode = 'mock'

@@ -1,0 +1,145 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: wallet-stack
+  labels:
+    cloud.googleapis.com/location: us-central1
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/client-name: "deploy-1778786518"
+        run.googleapis.com/container-dependencies: |
+          {"wallet-frontend":["wallet-backend"], "wallet-backend":["pid-db"], "pid-provider":["pid-db"], "trusted-list":["pid-db"], "certificate-authority":["pid-db"], "relying-party":["trusted-list"], "reverse-proxy":["relying-party", "trusted-list", "pid-provider", "wallet-backend", "wallet-frontend", "certificate-authority"]}
+    spec:
+      containers:
+        - name: reverse-proxy
+          image: us-east1-docker.pkg.dev/eudiw-ktu/wallet-repo/reverse-proxy:latest
+          command: ["/cloud-run-entrypoint.sh"]
+          env:
+            - name: DEPLOY_ID
+              value: "deploy-1778786518"
+          ports:
+            - containerPort: 8080
+        - name: relying-party
+          image: us-east1-docker.pkg.dev/eudiw-ktu/wallet-repo/relying-party:latest
+          env:
+            - name: SERVICE_NAME
+              value: "The relying party service"
+            - name: PORT
+              value: "8001"
+            - name: TRUSTED_LIST_URL
+              value: "http://127.0.0.1:8002/api/trusted-list/pid-provider"
+          startupProbe:
+            tcpSocket:
+              port: 8001
+            initialDelaySeconds: 2
+            periodSeconds: 3
+            failureThreshold: 60
+        - name: trusted-list
+          image: us-east1-docker.pkg.dev/eudiw-ktu/wallet-repo/trusted-list:latest
+          command: ["sh", "-c", "update-ca-certificates && hypercorn app:app --bind 0.0.0.0:8002"]
+          env:
+            - name: SERVICE_NAME
+              value: "List of trusted providers service"
+          startupProbe:
+            tcpSocket:
+              port: 8002
+            initialDelaySeconds: 2
+            periodSeconds: 3
+            failureThreshold: 60
+        - name: pid-provider
+          image: us-east1-docker.pkg.dev/eudiw-ktu/wallet-repo/pid-provider:latest
+          command: ["sh", "-c", "python /app/keys/generate.py && update-ca-certificates && hypercorn app:app --bind 0.0.0.0:8003"]
+          env:
+            - name: SERVICE_NAME
+              value: "PID provider service"
+            - name: PGHOST
+              value: "127.0.0.1"
+            - name: PGUSER
+              value: "postgres"
+            - name: PGPASSWORD
+              value: "password"
+            - name: PGDATABASE
+              value: "piddb"
+            - name: PGPORT
+              value: "5432"
+            - name: SECRET_KEY
+              value: "Paslaptingasis_Raktas!!"
+          startupProbe:
+            tcpSocket:
+              port: 8003
+            initialDelaySeconds: 2
+            periodSeconds: 3
+            failureThreshold: 60
+        - name: wallet-backend
+          image: us-east1-docker.pkg.dev/eudiw-ktu/wallet-repo/wallet-backend:latest
+          command: ["sh", "-c", "uv run python -m hypercorn app.app:app --bind 0.0.0.0:8004"]
+          env:
+            - name: SERVICE_NAME
+              value: "Backend service"
+            - name: PGHOST
+              value: "127.0.0.1"
+            - name: PGUSER
+              value: "postgres"
+            - name: PGPASSWORD
+              value: "password"
+            - name: PGDATABASE
+              value: "walletdb"
+            - name: PGPORT
+              value: "5432"
+          startupProbe:
+            tcpSocket:
+              port: 8004
+            initialDelaySeconds: 2
+            periodSeconds: 3
+            failureThreshold: 60
+        - name: certificate-authority
+          image: us-east1-docker.pkg.dev/eudiw-ktu/wallet-repo/certificate-authority:latest
+          command: ["sh", "-c", "uv run python -m hypercorn app.app:app --bind 0.0.0.0:8006"]
+          env:
+            - name: SERVICE_NAME
+              value: "CA service"
+            - name: PGHOST
+              value: "127.0.0.1"
+            - name: PGUSER
+              value: "postgres"
+            - name: PGPASSWORD
+              value: "password"
+            - name: PGDATABASE
+              value: "cadb"
+            - name: PGPORT
+              value: "5432"
+          startupProbe:
+            tcpSocket:
+              port: 8006
+            initialDelaySeconds: 2
+            periodSeconds: 3
+            failureThreshold: 60
+        - name: wallet-frontend
+          image: us-east1-docker.pkg.dev/eudiw-ktu/wallet-repo/wallet-frontend:latest
+          env:
+            - name: SERVICE_NAME
+              value: "Frontend service"
+          command: ["nginx", "-g", "daemon off;", "-c", "/etc/nginx/cloud-run-nginx.conf"]
+          startupProbe:
+            tcpSocket:
+              port: 8005
+            initialDelaySeconds: 2
+            periodSeconds: 3
+            failureThreshold: 60
+        - name: pid-db
+          image: us-east1-docker.pkg.dev/eudiw-ktu/wallet-repo/pid-db:latest
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "password"
+            - name: POSTGRES_DB
+              value: "piddb"
+          startupProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 2
+            periodSeconds: 3
+            failureThreshold: 60

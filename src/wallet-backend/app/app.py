@@ -23,7 +23,7 @@ app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024
 app.secret_key = secrets.token_urlsafe(16)
 app = cors(
     app,
-    allow_origin=["https://wallet-frontend.wallet.test"],
+    allow_origin="*",
     allow_methods=["POST", "OPTIONS", "GET"],
     allow_headers=["Content-Type", "Authorization"],
 )

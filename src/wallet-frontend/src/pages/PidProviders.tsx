@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Building2, ChevronRight } from "lucide-react";
 import styles from "../components/PidProvidersPage/PidProviders.module.css";
+import { TRUSTED_LIST_URL, getAssetUrl } from "../config";
 import { useTranslation } from "react-i18next";
 import {
   createPidIssuanceMaterial,
@@ -24,7 +25,7 @@ function PidProviders() {
     async function fetchProviders() {
       try {
         const response = await fetch(
-          "https://public.trusted-list.wallet.test/api/trusted-list/pid-provider?fields=domain,name,request_pid_endpoint,receive_pid_endpoint",
+          `${TRUSTED_LIST_URL}/api/trusted-list/pid-provider?fields=domain,name,request_pid_endpoint,receive_pid_endpoint`,
         );
         if (!response.ok) {
           throw new Error(`Failed to fetch providers: ${response.status}`);
@@ -57,7 +58,7 @@ function PidProviders() {
       const pubKeyParam = encodeURIComponent(JSON.stringify(minimalPubKey));
       const passkeyParam = encodeURIComponent(passkey);
       const redirectUri = encodeURIComponent(
-        `${window.location.origin}/pid-callback`,
+        `${window.location.origin}${getAssetUrl('/pid-callback')}`,
       );
 
       const url =
