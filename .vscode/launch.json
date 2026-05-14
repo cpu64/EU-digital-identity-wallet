@@ -29,7 +29,7 @@
       "type": "debugpy",
       "request": "attach",
       "connect": {
-        "host": "ca.wallet.test",
+        "host": "wallet-ca.wallet.test",
         "port": 5679
       },
       "pathMappings": [

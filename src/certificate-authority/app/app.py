@@ -2,7 +2,6 @@ import os
 import secrets
 import uuid
 import argon2
-from flask import redirect
 from quart_auth import (
     AuthUser,
     QuartAuth,
@@ -13,6 +12,7 @@ from quart_auth import (
 )
 from quart_cors import cors
 from quart import (
+    redirect,
     Blueprint,
     Quart,
     current_app,

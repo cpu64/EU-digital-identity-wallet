@@ -53,8 +53,12 @@ def generate_root_cert(private_key, public_key):
 
     return root_cert
 
+
 def load_cert_info():
-    if not Path("app/keys/private_key.pem").exists() or not Path("app/keys/public_key.pem").exists():
+    if (
+        not Path("app/keys/private_key.pem").exists()
+        or not Path("app/keys/public_key.pem").exists()
+    ):
         raise FileNotFoundError(f"File not found: app/keys/private_key.pem")
 
     with open("app/keys/private_key.pem", "rb") as f:
@@ -75,8 +79,8 @@ def load_cert_info():
     return (private_key, public_key, cert)
 
 
-def handle_csr(csr_text, key, cert):
-    csr = x509.load_pem_x509_csr(csr_text, default_backend())
+def handle_csr(csr_text: str, key, cert):
+    csr = x509.load_pem_x509_csr(csr_text.encode(encoding="utf-8"), default_backend())
 
     if not csr.is_signature_valid:
         return None
@@ -101,4 +105,4 @@ def handle_csr(csr_text, key, cert):
     cert = builder.sign(private_key=key, algorithm=hashes.SHA256())
     cert_pem = cert.public_bytes(serialization.Encoding.PEM)
 
-    return cert_pem
+    return cert_pem.decode("utf-8")
