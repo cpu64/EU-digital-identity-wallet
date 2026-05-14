@@ -8,9 +8,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 
 
-def generate_root_cert():
-    root_key = ec.generate_private_key(ec.SECP256R1())
-
+def generate_root_cert(private_key, public_key):
     subject = issuer = x509.Name(
         [
             x509.NameAttribute(NameOID.COUNTRY_NAME, "LT"),
@@ -25,7 +23,7 @@ def generate_root_cert():
         x509.CertificateBuilder()
         .subject_name(subject)
         .issuer_name(issuer)
-        .public_key(root_key.public_key())
+        .public_key(public_key)
         .serial_number(x509.random_serial_number())
         .not_valid_before(datetime.datetime.now(datetime.timezone.utc))
         .not_valid_after(
@@ -47,44 +45,34 @@ def generate_root_cert():
             critical=True,
         )
         .add_extension(
-            x509.SubjectKeyIdentifier.from_public_key(root_key.public_key()),
+            x509.SubjectKeyIdentifier.from_public_key(public_key),
             critical=False,
         )
-        .sign(root_key, hashes.SHA256())
+        .sign(private_key, hashes.SHA256())
     )
 
-    return (root_key, root_cert)
-
-
-def write_cert_info(key: ec.EllipticCurvePrivateKey, cert: x509.Certificate):
-    with open("blob/key.pem", "wb") as f:
-        f.write(
-            key.private_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PrivateFormat.TraditionalOpenSSL,
-                encryption_algorithm=serialization.NoEncryption(),
-            )
-        )
-
-    with open("blob/cert.pem", "wb") as f:
-        f.write(cert.public_bytes(encoding=serialization.Encoding.PEM))
-
+    return root_cert
 
 def load_cert_info():
-    if not Path("blob/key.pem").exists() or not Path("blob/cert.pem").exists():
-        return None
+    if not Path("app/keys/private_key.pem").exists() or not Path("app/keys/public_key.pem").exists():
+        raise FileNotFoundError(f"File not found: app/keys/private_key.pem")
 
-    with open("blob/key.pem", "rb") as f:
-        key_lines = f.read()
+    with open("app/keys/private_key.pem", "rb") as f:
+        private_key = serialization.load_pem_private_key(f.read(), password=None)
 
-    key = serialization.load_pem_private_key(key_lines, None, default_backend())
+    with open("app/keys/public_key.pem", "rb") as f:
+        public_key = serialization.load_pem_public_key(f.read())
 
-    with open("blob/cert.pem", "rb") as f:
-        cert_lines = f.read()
+    cert = None
+    if not Path("app/keys/ca_cert.pem").exists():
+        cert = generate_root_cert(private_key, public_key)
+        with open("app/keys/ca_cert.pem", "wb") as f:
+            f.write(cert.public_bytes(encoding=serialization.Encoding.PEM))
+    else:
+        with open("app/keys/ca_cert.pem", "rb") as f:
+            cert = x509.load_pem_x509_certificate(f.read(), default_backend())
 
-    cert = x509.load_pem_x509_certificate(cert_lines, default_backend())
-
-    return (key, cert)
+    return (private_key, public_key, cert)
 
 
 def handle_csr(csr_text, key, cert):

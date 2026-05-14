@@ -45,16 +45,14 @@ QuartAuth(app)
 @app.before_serving
 async def startup():
     app.db_engine = await db.init_db()
-    app.blob_dir = "blob"
+    app.blob_dir = "app/keys"
     os.makedirs(app.blob_dir, exist_ok=True)
 
     cert_info = signing.load_cert_info()
-    if cert_info == None:
-        cert_info = signing.generate_root_cert()
-        signing.write_cert_info(cert_info[0], cert_info[1])
 
-    app.cert_key = cert_info[0]
-    app.cert = cert_info[1]
+    app.private_key = cert_info[0]
+    app.public_key = cert_info[1]
+    app.cert = cert_info[2]
 
 
 @app.after_serving
@@ -151,7 +149,7 @@ async def sign(id):
         return "Malformed certificate signing request", 400
 
     try:
-        cert_pem = signing.handle_csr(req["csr"], app.cert_key, app.cert)
+        cert_pem = signing.handle_csr(req["csr"], app.private_key, app.cert)
         if cert_pem is None:
             return "Invalid certificate signing request", 400
     except Exception as e:
