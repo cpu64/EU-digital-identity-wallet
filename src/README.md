@@ -97,10 +97,11 @@ gcloud run services replace cloud-run-service.yaml --region us-east1
 
 After successful deployment, the services are routed via the reverse proxy at the following URLs:
 
-- **Frontend**: [https://wallet-stack-334462690212.us-east1.run.app/](https://wallet-stack-334462690212.us-east1.run.app/)
-- **Backend**: [https://wallet-stack-334462690212.us-east1.run.app/proxy/backend/](https://wallet-stack-334462690212.us-east1.run.app/proxy/backend/)
-- **Relying Party**: [https://wallet-stack-334462690212.us-east1.run.app/proxy/relying-party/](https://wallet-stack-334462690212.us-east1.run.app/proxy/relying-party/)
-- **PID Provider**: [https://wallet-stack-334462690212.us-east1.run.app/proxy/pid-provider/](https://wallet-stack-334462690212.us-east1.run.app/proxy/pid-provider/)
-- **Public PID Provider**: [https://wallet-stack-334462690212.us-east1.run.app/proxy/public-pid-provider/](https://wallet-stack-334462690212.us-east1.run.app/proxy/public-pid-provider/)
-- **Trusted List**: [https://wallet-stack-334462690212.us-east1.run.app/proxy/trusted-list/](https://wallet-stack-334462690212.us-east1.run.app/proxy/trusted-list/)
-- **Certificate Authority**: [https://wallet-stack-334462690212.us-east1.run.app/proxy/ca/](https://wallet-stack-334462690212.us-east1.run.app/proxy/ca/)
+- **Landing Page**: [https://wallet-stack-334462690212.us-east1.run.app/](https://wallet-stack-334462690212.us-east1.run.app/)
+- **Wallet Frontend**: [https://wallet-stack-334462690212.us-east1.run.app/wallet-frontend/](https://wallet-stack-334462690212.us-east1.run.app/wallet-frontend/)
+- **Wallet Backend**: [https://wallet-stack-334462690212.us-east1.run.app/wallet-backend/](https://wallet-stack-334462690212.us-east1.run.app/wallet-backend/)
+- **Relying Party**: [https://wallet-stack-334462690212.us-east1.run.app/relying-party/](https://wallet-stack-334462690212.us-east1.run.app/relying-party/)
+- **PID Provider**: [https://wallet-stack-334462690212.us-east1.run.app/pid-provider/](https://wallet-stack-334462690212.us-east1.run.app/pid-provider/)
+- **Public PID Provider**: [https://wallet-stack-334462690212.us-east1.run.app/public-pid-provider/](https://wallet-stack-334462690212.us-east1.run.app/public-pid-provider/)
+- **Trusted List**: [https://wallet-stack-334462690212.us-east1.run.app/trusted-list/](https://wallet-stack-334462690212.us-east1.run.app/trusted-list/)
+- **Certificate Authority**: [https://wallet-stack-334462690212.us-east1.run.app/ca/](https://wallet-stack-334462690212.us-east1.run.app/ca/)
