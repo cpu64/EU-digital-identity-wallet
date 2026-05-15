@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getData, addTransaction, type Credential } from "@/data/wallet_data";
 import styles from "../components/VerifyPage/Verify.module.css";
@@ -68,7 +68,7 @@ function getDisclosureMap(
       if (Array.isArray(parsed) && parsed.length >= 3) {
         map.set(parsed[1], { raw: d, salt: parsed[0], value: parsed[2] });
       }
-    } catch { }
+    } catch {}
   }
 
   return map;
@@ -150,6 +150,7 @@ function Verify() {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const fromScanRef = useRef(false);
 
   const handleDecode = async (inputOverride?: string) => {
     setError("");
@@ -243,6 +244,7 @@ function Verify() {
     const scannedData = (location.state as { scannedData?: string })
       ?.scannedData;
     if (scannedData) {
+      fromScanRef.current = true;
       setBase64Input(scannedData);
       navigate(location.pathname, { replace: true, state: {} });
       handleDecode(scannedData);
@@ -368,7 +370,11 @@ function Verify() {
     await fetch(request.proof_endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nonce: request.nonce, error: "access_denied", error_description: "User declined" }),
+      body: JSON.stringify({
+        nonce: request.nonce,
+        error: "access_denied",
+        error_description: "User declined",
+      }),
     });
     if (selectedCredential) {
       await addTransaction({
@@ -385,6 +391,10 @@ function Verify() {
   };
 
   const handleReset = () => {
+    if (fromScanRef.current) {
+      navigate("/scan");
+      return;
+    }
     setStep("input");
     setBase64Input("");
     setError("");
@@ -529,7 +539,9 @@ function Verify() {
                     </span>
                   )}
                   {!claim.isRequired && (
-                    <span className={styles.optionalBadge}>{t("verify.optional_badge")}</span>
+                    <span className={styles.optionalBadge}>
+                      {t("verify.optional_badge")}
+                    </span>
                   )}
                 </span>
                 <span className={styles.attrValue}>{claim.value}</span>
@@ -537,7 +549,8 @@ function Verify() {
                   type="checkbox"
                   className={styles.checkbox}
                   checked={
-                    claim.isRequired || (checkedOptionalClaims[claim.name] ?? false)
+                    claim.isRequired ||
+                    (checkedOptionalClaims[claim.name] ?? false)
                   }
                   onChange={() => {
                     if (!claim.isRequired) {
@@ -557,9 +570,17 @@ function Verify() {
             <button
               className={styles.shareButton}
               onClick={handleShare}
-              disabled={matchedClaims.filter(c => c.isRequired || checkedOptionalClaims[c.name]).length === 0}
+              disabled={
+                matchedClaims.filter(
+                  (c) => c.isRequired || checkedOptionalClaims[c.name],
+                ).length === 0
+              }
             >
-              {t("verify.share_claims", { count: matchedClaims.filter(c => c.isRequired || checkedOptionalClaims[c.name]).length })}
+              {t("verify.share_claims", {
+                count: matchedClaims.filter(
+                  (c) => c.isRequired || checkedOptionalClaims[c.name],
+                ).length,
+              })}
             </button>
           </div>
         </div>
@@ -587,15 +608,18 @@ function Verify() {
           </p>
           <ul className={styles.sharedList}>
             {matchedClaims
-              .filter(claim => claim.isRequired || checkedOptionalClaims[claim.name])
+              .filter(
+                (claim) =>
+                  claim.isRequired || checkedOptionalClaims[claim.name],
+              )
               .map((claim) => (
-              <li key={claim.name} className={styles.sharedItem}>
-                <span className={styles.sharedLabel}>
-                  {t(`claims.${claim.name}`, { defaultValue: claim.label })}
-                </span>
-                <span className={styles.sharedValue}>{claim.value}</span>
-              </li>
-            ))}
+                <li key={claim.name} className={styles.sharedItem}>
+                  <span className={styles.sharedLabel}>
+                    {t(`claims.${claim.name}`, { defaultValue: claim.label })}
+                  </span>
+                  <span className={styles.sharedValue}>{claim.value}</span>
+                </li>
+              ))}
           </ul>
           <button className={styles.resetButton} onClick={handleReset}>
             {t("verify.new_verification")}
