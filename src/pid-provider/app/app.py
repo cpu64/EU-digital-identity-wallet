@@ -1,9 +1,11 @@
 import os
 
 import json
-from quart import Quart
+
+from quart import Quart, session
 from quart_db import QuartDB
 from jwcrypto import jwk
+from datetime import timedelta
 
 from routes import register_routes
 from utils import cleanup_expired_entries
@@ -19,10 +21,15 @@ MAIN_DOMAIN = 'pid-provider.wallet.test'
 
 app = Quart(__name__, host_matching=True, static_host=MAIN_DOMAIN)
 app.secret_key = os.environ.get("SECRET_KEY")
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600 # 30 mins
 db = QuartDB(app, url=DB_URL)
 
 register_routes(app, db)
 
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
 
 @app.before_serving
 async def startup():
