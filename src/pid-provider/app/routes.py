@@ -80,7 +80,7 @@ def register_routes(app, db):
             session['totp_authenticated'] = True
             if 'generate_state' in session:
                 gen_state = session.get('generate_state')
-                return redirect(url_for('main.generate_pid', **gen_state))
+                return redirect(url_for('main.create_pid', **gen_state))
             return redirect(url_for('main.dashboard'))
 
 
