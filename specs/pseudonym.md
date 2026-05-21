@@ -1,83 +1,74 @@
-# Relying Party – Pseudonym Account
+# Relying Party – Wallet Login Link
 
-The basic idea is that sensitive account data is stored in the wallet not the relying party.
+The basic idea is that the relying party creates a login link that the user stores in their wallet.
 
-## Issuance Flow
+The wallet does not store sensitive account data. Instead, it stores a login URL provided by the relying party and presents it back to the user as a launch button.
 
-### 1. Relying party creates pseudonym account
+## Registration Flow
 
-The relying party creates a pseudonym account object containing:
+### 1. Relying Party creates login link
 
-* User attributes (uuid, username, name, email, etc.)
-* Endpoint to call to login
-* Issuance metadata (e.g. timestamps)
+The relying party generates a cryptographically random 256-bit token and associates it with a user account internally.
 
-### 2. Relying party signs account object
+The relying party then creates a login URL:
 
-The account is then **signed by the Relying Party private key**.
-
-**Example PseudonymAccountJWT**
-
-*header*
-```json
-{
-    "alg": "ES256",
-    "typ": "PSEUDONYM"
-}
-```
-*payload*
-```json
-{
-    "iss": "https://relying-party.wallet.test",
-    "iat": 1710000000,
-    "login": "https://relying-party.wallet.test/pseudonym/login",
-
-    "account": {
-        "uuid": "b18e3b6c-ccb7-4308-b527-35e5e6ee2145",
-        "username": "alice123",
-        "name": "Alice Example",
-        "email": "alice@wallet.test"
-    }
-}
+```text
+https://relying-party.com/api/login?token=base64url(random(256-bit))
 ```
 
-### 3. Relying Party returns signed account as JWT
+**Example**
 
-The user copies the account object from Relying Party back to the wallet.
-
-**Format:**
-
-```
-eyJhbGciOiJFUzI1NiIsInR5cCI6IlBTRVVET05ZTSJ9.eyJpc3MiOiJodHRwczovL3JlbHlpbmctcGFydHkud2FsbGV0LnRlc3QiLCJpYXQiOjE3MTAwMDAwMDAsImxvZ2luIjoiaHR0cHM6Ly9yZWx5aW5nLXBhcnR5LndhbGxldC50ZXN0L3BzZXVkb255bS9sb2dpbiIsImFjY291bnQiOnsidXVpZCI6ImIxOGUzYjZjLWNjYjctNDMwOC1iNTI3LTM1ZTVlNmVlMjE0NSIsInVzZXJuYW1lIjoiYWxpY2UxMjMiLCJuYW1lIjoiQWxpY2UgRXhhbXBsZSIsImVtYWlsIjoiYWxpY2VAd2FsbGV0LnRlc3QifX0.gjziL_4C0mN9ahr-w0K7iG-63Ke9JHDbUhTegB22QmschhoEsmz97aOLGSTy78OXdmy9qwRiCiX4QRkPR54r0w
+```text
+https://relying-party.com/api/login?token=Q1h4T0J6Qm9sV0l3bUN1cXNzY3d6N2xWb2d4d1B6Qk5vM2Q
 ```
 
-### 4. Wallet stores pseudonym
+The token acts as a reference to the user account stored by the relying party.
 
-Wallet stores:
+### 2. User copies login link to wallet
 
-* Relying Party signed pseudonym account
-* Metadata (optional)
+The user copies the login URL and pastes it into the wallet.
 
-## Authentication Flow
+The wallet stores:
 
-### 1. User selects the account
+* Full login URL
+* Extracted domain name
+* Optional metadata (timestamps, labels, etc.)
 
-User chooses the account, wallet parses PseudonymAccountJWT to extract login url.
+### 3. Wallet creates account button
 
-### 2. Wallet redirects to Relying Party
+The wallet extracts the domain from the URL and creates a button for the user.
 
-Wallet redirects user to the extracted login url with PseudonymAccountJWT in the url.
+**Example**
+
+```text
+relying-party.com
+```
+
+The button represents the relying party account entry stored in the wallet.
+
+---
+
+# Authentication Flow
+
+### 1. User selects account
+
+The user selects the stored account button inside the wallet.
+
+### 2. Wallet redirects user
+
+The wallet redirects the user to the stored login URL.
 
 **Example Redirect**
 
+```text
+https://relying-party.com/api/login?token=Q1h4T0J6Qm9sV0l3bUN1cXNzY3d6N2xWb2d4d1B6Qk5vM2Q
 ```
-https://relying-party.wallet.test/pseudonym/login?account=eyJhbGciOiJFUzI1NiIsInR5cCI6IlBTRVVET05ZTSJ9.eyJpc3MiOiJodHRwczovL3JlbHlpbmctcGFydHkud2FsbGV0LnRlc3QiLCJpYXQiOjE3MTAwMDAwMDAsImxvZ2luIjoiaHR0cHM6Ly9yZWx5aW5nLXBhcnR5LndhbGxldC50ZXN0L3BzZXVkb255bS9sb2dpbiIsImFjY291bnQiOnsidXVpZCI6ImIxOGUzYjZjLWNjYjctNDMwOC1iNTI3LTM1ZTVlNmVlMjE0NSIsInVzZXJuYW1lIjoiYWxpY2UxMjMiLCJuYW1lIjoiQWxpY2UgRXhhbXBsZSIsImVtYWlsIjoiYWxpY2VAd2FsbGV0LnRlc3QifX0.gjziL_4C0mN9ahr-w0K7iG-63Ke9JHDbUhTegB22QmschhoEsmz97aOLGSTy78OXdmy9qwRiCiX4QRkPR54r0w
-```
 
-## Verification Flow (Relying Party)
+### 3. Relying Party authenticates token
 
-### 1. Verify Relying Party signature on account
+The relying party:
 
-* Decode pseudonym account
-* Validate Relying Party signature
-
+* Extracts the token from the request
+* Looks up the associated account/session
+* Authenticates the user
+* Creates an authenticated session
